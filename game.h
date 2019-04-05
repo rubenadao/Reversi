@@ -13,6 +13,8 @@ void mostrarJogo(ESTADO * e);
 void startEngine();
 //void confirmarLeitura(char * ficheiro);
 VALOR contrario(VALOR p);
+int ganhou (ESTADO * e);
 void humanVShuman(ESTADO * e);
+int pontuacao (ESTADO *e,VALOR p);
 
 #endif //REVERSI_GAME_H

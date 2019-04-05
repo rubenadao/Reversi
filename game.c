@@ -106,7 +106,6 @@ void startEngine() {
         interpretador(comando, &e);
         printf("Cmd:\n");
     }
-
 }
 
 
@@ -118,9 +117,7 @@ VALOR contrario(VALOR p) {
 int ganhou (ESTADO * e)
 {
     int i = 0;
-
     int j = 0;
-
     for (; i<8 && e->grelha [i][j] != VAZIA ; i++)
     {
         for (; j<8 && e->grelha [i][j] != VAZIA ; j++) ;
