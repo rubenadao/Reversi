@@ -6,5 +6,6 @@
 
 int main() {
     startEngine();
+    printf("alteracao");
     return 0;
 }
