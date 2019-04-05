@@ -36,6 +36,7 @@ typedef struct estado {
 
     //TODO pode ser desnecessário
     int iniciado;
+
     //TODO usar notação stack pointer
 
 } ESTADO;
