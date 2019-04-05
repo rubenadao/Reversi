@@ -6,6 +6,5 @@
 
 int main() {
     startEngine();
-    printf("RUSSO");
     return 0;
 }

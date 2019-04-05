@@ -133,3 +133,14 @@ void humanVShuman(ESTADO * e) {
     }
 }
 
+int pontuacao (ESTADO *e,VALOR p){
+    int i=0,j=0,n=0;
+    for(i;i<8;i++){
+        for(j;j<8;j++){
+            if(e->grelha[i][j]==p)
+                n++;
+        }
+        j=0;
+    }
+    return n;
+}
