@@ -88,6 +88,7 @@ void novaJogada(POSICAO p, ESTADO *e) {
 }
 
 void mostrarJogo(ESTADO * e){
+    showPontuacao(e);
     printf("Turno de %c\n\n", pecaParaChar(e->peca));
     printa(*e);
     printf("\n");
@@ -145,8 +146,8 @@ int pontuacao (ESTADO *e,VALOR p){
     return n;
 }
 
-char * showPontuacao(ESTADO *e) {
-    return NULL;
+void showPontuacao(ESTADO *e) {
+    printf("Pontuacao:\nX:%d\nO:%d\n\n",pontuacao(e,VALOR_X),pontuacao(e,VALOR_O));
 }
 
 void humanVShuman(ESTADO * e) {

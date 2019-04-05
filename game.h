@@ -16,6 +16,7 @@ VALOR pecaOposta(VALOR p);
 int ganhou (ESTADO * e);
 int calculaVencedor(ESTADO *e);
 int pontuacao (ESTADO *e,VALOR p);
+void showPontuacao(ESTADO *e);
 void humanVShuman(ESTADO * e);
 
 #endif //REVERSI_GAME_H

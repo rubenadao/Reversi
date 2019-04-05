@@ -8,17 +8,43 @@
 
 C:/Users/Ruben/CLionProjects/Reversi/estado.h
 
+C:/Users/Ruben/CLionProjects/Reversi/file_manager.h
+estado.h
+C:/Users/Ruben/CLionProjects/Reversi/estado.h
+
+C:/Users/Ruben/CLionProjects/Reversi/game.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+ctype.h
+-
+game.h
+C:/Users/Ruben/CLionProjects/Reversi/game.h
+estado.h
+C:/Users/Ruben/CLionProjects/Reversi/estado.h
+stack.h
+C:/Users/Ruben/CLionProjects/Reversi/stack.h
+linkedLists.h
+C:/Users/Ruben/CLionProjects/Reversi/linkedLists.h
+validos.h
+C:/Users/Ruben/CLionProjects/Reversi/validos.h
+file_manager.h
+C:/Users/Ruben/CLionProjects/Reversi/file_manager.h
+
 C:/Users/Ruben/CLionProjects/Reversi/game.h
 estado.h
 C:/Users/Ruben/CLionProjects/Reversi/estado.h
 
-C:/Users/Ruben/CLionProjects/Reversi/main.c
-stdio.h
--
-stdio.h
--
+C:/Users/Ruben/CLionProjects/Reversi/linkedLists.h
 estado.h
 C:/Users/Ruben/CLionProjects/Reversi/estado.h
-game.h
-C:/Users/Ruben/CLionProjects/Reversi/game.h
+
+C:/Users/Ruben/CLionProjects/Reversi/stack.h
+estado.h
+C:/Users/Ruben/CLionProjects/Reversi/estado.h
+
+C:/Users/Ruben/CLionProjects/Reversi/validos.h
 

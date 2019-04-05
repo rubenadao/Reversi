@@ -75,4 +75,21 @@ VALOR charParaPeca (char peca){
     else return VAZIA;
 }
 
+POSICAO subtraiVetores(POSICAO * a, POSICAO * b) {
+    POSICAO c;
+    c.ln = a->ln - b->ln;
+    c.cl = a->cl - b->cl;
+    return c;
+}
+
+void normalizaVetor(POSICAO * a){
+    if (a->ln != 0) a->ln = 1;
+    if (a->cl != 0) a->cl = 1;
+}
+
+int isPotencial(POSICAO * a) {
+    if ( (a->ln == 0 && a->cl != 0) || (a->ln != 0 && a->cl == 0) ) return 1;
+    else if (a->ln != 0 && a->ln == a->cl) return 1;
+    else return 0;
+}
 
