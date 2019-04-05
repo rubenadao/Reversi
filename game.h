@@ -12,9 +12,10 @@ void novaJogada(POSICAO p, ESTADO *e);
 void mostrarJogo(ESTADO * e);
 void startEngine();
 //void confirmarLeitura(char * ficheiro);
-VALOR contrario(VALOR p);
+VALOR pecaOposta(VALOR p);
 int ganhou (ESTADO * e);
-void humanVShuman(ESTADO * e);
+int calculaVencedor(ESTADO *e);
 int pontuacao (ESTADO *e,VALOR p);
+void humanVShuman(ESTADO * e);
 
 #endif //REVERSI_GAME_H

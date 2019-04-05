@@ -38,7 +38,7 @@ LPos posValidas(ESTADO * e, VALOR peca) {
 
 void pcima(ESTADO *e,int l,int c,LPos *t) {
     int i = l-1;
-    for(i;i>-1 && e->grelha[i][c]==(contrario(e->peca));i--);
+    for(i;i>-1 && e->grelha[i][c]==(pecaOposta(e->peca));i--);
     if (i!=-1 && i!=l-1) {
         if (e->grelha[i][c] == VAZIA) {
             POSICAO p;
@@ -51,7 +51,7 @@ void pcima(ESTADO *e,int l,int c,LPos *t) {
 
 void pbaixo(ESTADO *e,int l,int c,LPos *t) {
     int i = l+1;
-    for(i;i<8 && e->grelha[i][c]==(contrario(e->peca));i++);
+    for(i;i<8 && e->grelha[i][c]==(pecaOposta(e->peca));i++);
     if (i!=8 && i!=l+1) {
         if (e->grelha[i][c] == VAZIA) {
             POSICAO p;
@@ -64,7 +64,7 @@ void pbaixo(ESTADO *e,int l,int c,LPos *t) {
 
 void pesquerda(ESTADO *e,int l,int c,LPos *t) {
     int i = c-1;
-    for(i;i>-1 && e->grelha[l][i]==(contrario(e->peca));i--);
+    for(i;i>-1 && e->grelha[l][i]==(pecaOposta(e->peca));i--);
     if (i!=-1 && i!=c-1) {
         if (e->grelha[l][i] == VAZIA) {
             POSICAO p;
@@ -77,7 +77,7 @@ void pesquerda(ESTADO *e,int l,int c,LPos *t) {
 
 void pdireita(ESTADO *e,int l,int c,LPos *t) {
     int i = c+1;
-    for(i;i<8 && e->grelha[l][i]==(contrario(e->peca));i++);
+    for(i;i<8 && e->grelha[l][i]==(pecaOposta(e->peca));i++);
     if (i!=8 && i!=c+1) {
         if (e->grelha[l][i] == VAZIA) {
             POSICAO p;
@@ -90,7 +90,7 @@ void pdireita(ESTADO *e,int l,int c,LPos *t) {
 
 void pdiagDC(ESTADO *e,int l,int c,LPos *t) {
     int i = l-1,j = c+1;
-    for(i,j;i>-1 && j<8 && e->grelha[i][j]==(contrario(e->peca));i--,j++);
+    for(i,j;i>-1 && j<8 && e->grelha[i][j]==(pecaOposta(e->peca));i--,j++);
     if (j!=8 && j!=c+1 && i!=-1 && i!=l-1) {
         if (e->grelha[i][j] == VAZIA) {
             POSICAO p;
@@ -103,7 +103,7 @@ void pdiagDC(ESTADO *e,int l,int c,LPos *t) {
 
 void pdiagDB(ESTADO *e,int l,int c,LPos *t) {
     int i = l+1,j = c+1;
-    for(i,j;i<8 && j<8 && e->grelha[i][j]==(contrario(e->peca));i++,j++);
+    for(i,j;i<8 && j<8 && e->grelha[i][j]==(pecaOposta(e->peca));i++,j++);
     if (j!=8 && j!=c+1 && i!=8 && i!=l+1) {
         if (e->grelha[i][j] == VAZIA) {
             POSICAO p;
@@ -116,7 +116,7 @@ void pdiagDB(ESTADO *e,int l,int c,LPos *t) {
 
 void pdiagEC(ESTADO *e,int l,int c,LPos *t) {
     int i = l-1,j = c-1;
-    for(i,j;i>-1 && j>-1 && e->grelha[i][j]==(contrario(e->peca));i--,j--);
+    for(i,j;i>-1 && j>-1 && e->grelha[i][j]==(pecaOposta(e->peca));i--,j--);
     if (j!=-1 && j!=c-1 && i!=-1 && i!=l-1) {
         if (e->grelha[i][j] == VAZIA) {
             POSICAO p;
@@ -129,7 +129,7 @@ void pdiagEC(ESTADO *e,int l,int c,LPos *t) {
 
 void pdiagEB(ESTADO *e,int l,int c,LPos *t) {
     int i = l+1,j = c-1;
-    for(i,j;i<8 && j>-1 && e->grelha[i][j]==(contrario(e->peca));i++,j--);
+    for(i,j;i<8 && j>-1 && e->grelha[i][j]==(pecaOposta(e->peca));i++,j--);
     if (j!=-1 && j!=c-1 && i!=8 && i!=l+1) {
         if (e->grelha[i][j] == VAZIA) {
             POSICAO p;

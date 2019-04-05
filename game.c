@@ -109,28 +109,45 @@ void startEngine() {
 }
 
 
-VALOR contrario(VALOR p) {
+VALOR pecaOposta(VALOR p) {
     if (p==VALOR_X) return VALOR_O;
     else return VALOR_X;
 }
 
-int ganhou (ESTADO * e)
-{
-    int i = 0;
-    int j = 0;
-    for (; i<8 && e->grelha [i][j] != VAZIA ; i++)
-    {
-        for (; j<8 && e->grelha [i][j] != VAZIA ; j++) ;
+int ganhou(ESTADO * e) {
+    int i = 0, j = 0;
+    for (; i<8 && e->grelha [i][j] != VAZIA ; i++) {
+        for (; j<8 && e->grelha [i][j] != VAZIA ; j++);
         j=0;
     }
-    if (i==8 && j==0) {
-        return 0;
-    }
+    if (i==8)  return calculaVencedor(e);
     if ((posValidas(e , VALOR_O )== NULL &&  (posValidas(e, VALOR_X)== NULL))) {
-        return 0;
+        calculaVencedor(e);
     }
+    return -1;
 }
 
+int calculaVencedor(ESTADO *e) {
+        if (pontuacao(e,VALOR_X) > pontuacao(e,VALOR_O)) return 0;
+        else if (pontuacao(e,VALOR_X) < pontuacao(e,VALOR_O)) return 1;
+        else return 2;
+}
+
+int pontuacao (ESTADO *e,VALOR p){
+    int i=0,j=0,n=0;
+    for(;i<8;i++){
+        for(;j<8;j++){
+            if(e->grelha[i][j]==p)
+                n++;
+        }
+        j=0;
+    }
+    return n;
+}
+
+char * showPontuacao(ESTADO *e) {
+    return NULL;
+}
 
 void humanVShuman(ESTADO * e) {
     int opcao = -1;
@@ -143,16 +160,4 @@ void humanVShuman(ESTADO * e) {
         if (jogador == 1) jogador++;
         else jogador--;
     }
-}
-
-int pontuacao (ESTADO *e,VALOR p){
-    int i=0,j=0,n=0;
-    for(i;i<8;i++){
-        for(j;j<8;j++){
-            if(e->grelha[i][j]==p)
-                n++;
-        }
-        j=0;
-    }
-    return n;
 }
