@@ -115,8 +115,23 @@ VALOR contrario(VALOR p) {
     else return VALOR_X;
 }
 
-int ganhou(ESTADO * e) {
+int ganhou (ESTADO * e)
+{
+    int i = 0;
 
+    int j = 0;
+
+    for (; i<8 && e->grelha [i][j] != VAZIA ; i++)
+    {
+        for (; j<8 && e->grelha [i][j] != VAZIA ; j++) ;
+        j=0;
+    }
+    if (i==8 && j==0) {
+        return 0;
+    }
+    if ((posValidas(e , VALOR_O )== NULL &&  (posValidas(e, VALOR_X)== NULL))) {
+        return 0;
+    }
 }
 
 
