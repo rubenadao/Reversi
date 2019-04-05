@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Ruben/CLionProjects/Reversi/estado.h
+
+C:/Users/Ruben/CLionProjects/Reversi/game.h
+estado.h
+C:/Users/Ruben/CLionProjects/Reversi/estado.h
+
+C:/Users/Ruben/CLionProjects/Reversi/main.c
+stdio.h
+-
+stdio.h
+-
+estado.h
+C:/Users/Ruben/CLionProjects/Reversi/estado.h
+game.h
+C:/Users/Ruben/CLionProjects/Reversi/game.h
+
