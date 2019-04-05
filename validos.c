@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <io.h>
 #include "game.h"
 #include "estado.h"
 #include "stack.h"
@@ -14,9 +13,9 @@
 #include "validos.h"
 
 
-LPos posValidas(ESTADO * e) {
+LPos posValidas(ESTADO * e, VALOR peca) {
     LPos l=NULL;
-    VALOR t=e->peca;
+    VALOR t=peca;
     int i=0,j=0;
     for(;i<8;i++) {
         for(;j<8;j++) {

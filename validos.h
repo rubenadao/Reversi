@@ -5,7 +5,7 @@
 #ifndef REVERSI_VALIDOS_H
 #define REVERSI_VALIDOS_H
 
-LPos posValidas(ESTADO * e);
+LPos posValidas(ESTADO * e, VALOR peca);
 void pcima(ESTADO *e,int l,int c,LPos *t);
 void pbaixo(ESTADO *e,int l,int c,LPos *t);
 void pesquerda(ESTADO *e,int l,int c,LPos *t);

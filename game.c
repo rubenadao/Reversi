@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <io.h>
 #include "game.h"
 #include "estado.h"
 #include "stack.h"
@@ -53,7 +52,7 @@ void interpretador(char * comando, ESTADO *e) {
         case 'S':
             if (1) {
                 LPos l;
-                l = posValidas(e);
+                l = posValidas(e,e->peca);
                 printList(l);
             }
             break;
@@ -114,6 +113,10 @@ void startEngine() {
 VALOR contrario(VALOR p) {
     if (p==VALOR_X) return VALOR_O;
     else return VALOR_X;
+}
+
+int ganhou(ESTADO * e) {
+
 }
 
 
