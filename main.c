@@ -6,6 +6,5 @@
 
 int main() {
     startEngine();
-    printf("INES");
     return 0;
 }
