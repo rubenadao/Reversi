@@ -5,6 +5,7 @@
 #ifndef REVERSI_VALIDOS_H
 #define REVERSI_VALIDOS_H
 #include "linkedLists.h"
+void initDirecoes(POSICAO direcoes []);
 LPos posValidas(ESTADO * e, VALOR peca);
 void pcima(ESTADO *e,int l,int c,LPos *t);
 void pbaixo(ESTADO *e,int l,int c,LPos *t);

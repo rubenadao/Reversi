@@ -15,9 +15,9 @@ void printa(ESTADO e)
     printf("  1 2 3 4 5 6 7 8");
     printf("\tPontuacao:\n");
 
-    int j = 1;
+    int k = 1;
     for (int i = 0; i < 8; i++) {
-        printf("%d ",j++);
+        printf("%d ",k++);
         for (int j = 0; j < 8; j++) {
             switch (e.grelha[i][j]) {
                 case VALOR_O: {
@@ -43,6 +43,7 @@ void printa(ESTADO e)
         }
         if (i == 0) printf("\tX: %d",pontuacao(&e,VALOR_X));
         if (i == 1) printf("\tO: %d",pontuacao(&e,VALOR_O));
+        if (i == 3) printf("\tTurno: %c",pecaParaChar(e.peca));
         printf("\n");
     }
 
@@ -97,6 +98,7 @@ void colocaValidos(ESTADO * e) {
         POSICAO p = getPosIndex(l,i);
         e->grelha[p.ln][p.cl] = VALIDO;
     }
+    freeList(l);
 }
 
 void proxTurno(ESTADO * e) {
@@ -107,12 +109,14 @@ void proxTurno(ESTADO * e) {
 char pecaParaChar(VALOR peca){
     if (peca == VALOR_O) return  'O';
     else if (peca == VALOR_X) return 'X';
+    else if (peca == VALIDO) return '.';
     else return '-';
 }
 
 VALOR charParaPeca (char peca){
     if (peca == 'X') return  VALOR_X;
     else if (peca == 'O') return VALOR_O;
+    else if (peca == '.') return VALIDO;
     else return VAZIA;
 }
 

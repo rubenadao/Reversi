@@ -12,6 +12,47 @@
 #include "linkedLists.h"
 #include "validos.h"
 
+void initDirecoes(POSICAO direcoes []) {
+    POSICAO d;
+    d.ln = -1;
+    d.cl = -1;
+    for (int i = 0; i < 3; i++) {
+        direcoes[i] = d; d.cl++;
+    }
+    d.ln++; d.cl =-1;
+    for (int i = 0; i < 2; i++) {
+        direcoes[i+3] = d; d.cl+=2;
+    }
+    d.ln++; d.cl =-1;
+    for (int i = 0; i < 3; i++) {
+        direcoes[i+5] = d; d.cl++;
+    }
+    for(int i = 0; i < 8; i++) {
+        printf("(%d,%d) ",direcoes[i].ln,direcoes[i].cl);
+    }
+}
+
+//TODO Vazia ou Valido
+LPos posValidas2(ESTADO * e, VALOR peca) {
+    LPos l = NULL;
+    POSICAO direcoes[8];
+    initDirecoes(direcoes);
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (e->grelha[i][j] == peca) {
+                for(int k = 0; k < 8; k++) {
+
+
+                    //TODO RUSSO
+
+
+
+                }
+            }
+        }
+    }
+    return l;
+}
 
 LPos posValidas(ESTADO * e, VALOR peca) {
     LPos l=NULL;

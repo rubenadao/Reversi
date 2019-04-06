@@ -38,6 +38,7 @@ void interpretador(char * comando, ESTADO *e) {
             break;
         case 'E':
             sscanf(comando,"%s %s",opcode,fstArg);
+            colocaValidos(e);
             escreverFicheiro(fstArg,e);
             if (e->iniciado) mostrarJogo(e);
             break;
@@ -59,7 +60,10 @@ void interpretador(char * comando, ESTADO *e) {
                         mostrarJogo(e);
                     }
                 }
-                else printf("Posicao Invalida!\n\n");
+                else {
+                    printf("Posicao Invalida!\n\n");
+                    mostrarJogo(e);
+                }
             } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'S':
@@ -70,8 +74,15 @@ void interpretador(char * comando, ESTADO *e) {
             } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'H':
+            if (1) {
+                POSICAO p[8];
+                initDirecoes(p);
+            }
             break;
         case 'U':
+            if (e->iniciado) {
+                //TODO RUSSO;
+            } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'A':
             break;
@@ -88,10 +99,9 @@ void novoJogo(VALOR peca, ESTADO *e) {
     initEstado(e);
     e->modo = 0;
     e->mostravalidos = 0;
-    STACKG historico;
-    initStackG(&historico);
+    //TODO RUSSO (acrescentar smpEstado inicial ao historico)
+    e->historico = NULL;
     e->peca = peca;
-    //TODO CHECK se pode jogar ainda..
     mostrarJogo(e);
 }
 
@@ -100,14 +110,18 @@ void novaJogada(POSICAO p, ESTADO *e) {
     e->grelha[p.ln][p.cl] = e->peca;
     executaMudanca(e,p);
     proxTurno(e);
+    //TODO RUSSO (acrescentar smpEstado ao historico)
     mostrarJogo(e);
 }
 
 
 
 void mostrarJogo(ESTADO * e){
+    //TODO se usar esta linha eliminar as "\n\n" das outras
+    printf("\n");
     //showPontuacao(e);
-    printf("Turno de %c\n\n", pecaParaChar(e->peca));
+    //TODO Qual preferem?
+    //printf("Turno de %c\n\n", pecaParaChar(e->peca));
     printa(*e);
     printf("\n");
 }
@@ -152,12 +166,12 @@ int calculaVencedor(ESTADO *e) {
         else return 2;
 }
 
-
 /*
 void showPontuacao(ESTADO *e) {
     printf("Pontuacao:\nX:%d\nO:%d\n\n",pontuacao(e,VALOR_X),pontuacao(e,VALOR_O));
 }
 */
+
 void humanVShuman(ESTADO * e) {
     int opcao = -1;
     int jogador = 1;

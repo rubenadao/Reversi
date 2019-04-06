@@ -64,6 +64,6 @@ void escreverFicheiro(char * ficheiro, ESTADO *e){
         }
         fprintf(file,"\n",NULL);
     }
-    printf("Jogo Guardado!\n");
+    printf("Jogo Guardado!\n\n");
     fclose(file);
 }

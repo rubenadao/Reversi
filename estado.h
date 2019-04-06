@@ -1,20 +1,14 @@
 //
 // Created by pja on 27/02/2019.
 //
-
-
-
 #ifndef PROJ_ESTADO_H
 #define PROJ_ESTADO_H
-
-
 
 //Estrutura que representa uma posição na Grelha do Estado
 typedef struct posicao{
     int ln;
     int cl;
 } POSICAO;
-
 
 /**
 estado.h
@@ -25,6 +19,17 @@ Definição do estado i.e. tabuleiro. Representação matricial do tabuleiro.
 // definição de valores possiveis no tabuleiro
 typedef enum {VAZIA, VALOR_X, VALOR_O, VALIDO} VALOR;
 
+
+typedef struct simple_estado {
+    VALOR peca; // peça do jogador que vai jogar!
+    VALOR grelha[8][8];
+} smpESTADO;
+
+typedef struct stack *STACK;
+typedef struct stack {
+    smpESTADO est;
+    STACK prox;
+} NodoS;
 
 /**
 Estrutura que armazena o estado do jogo
@@ -37,11 +42,11 @@ typedef struct estado {
     //TODO pode ser desnecessário
     int iniciado;
     int mostravalidos;
+    STACK historico;
 
     //TODO usar notação stack pointer
 
 } ESTADO;
-
 
 
 void printa(ESTADO);
