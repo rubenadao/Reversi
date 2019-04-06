@@ -44,17 +44,26 @@ void interpretador(char * comando, ESTADO *e) {
                     POSICAO p;
                     p.ln = (int)fstArg[0]-49;
                     p.cl = (int)sndArg[0]-49;
-                    novaJogada(p,e);
+                    colocaValidos(e);
+                    if (e->grelha[p.ln][p.cl] == VALIDO) {
+                        novaJogada(p,e);
+                        e->mostravalidos = 0;
+                    }
+                    else {
+                        //TODO mesmo que a jogada seja invalida ainda mostra os pontos validos
+                        printf("Escolha uma jogada valida!\n\n");
+                        mostrarJogo(e);
+                    }
                 }
                 else printf("Posicao Invalida!\n\n");
             } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'S':
-            if (1) {
-                LPos l;
-                l = posValidas(e,e->peca);
-                printList(l);
-            }
+            if (e->iniciado) {
+                e->mostravalidos = 1;
+                colocaValidos(e);
+                mostrarJogo(e);
+            } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'H':
             break;
@@ -74,6 +83,7 @@ void novoJogo(VALOR peca, ESTADO *e) {
     cleanEstado(e);
     initEstado(e);
     e->modo = 0;
+    e->mostravalidos = 0;
     STACKG historico;
     initStackG(&historico);
     e->peca = peca;
@@ -82,13 +92,17 @@ void novoJogo(VALOR peca, ESTADO *e) {
 }
 
 void novaJogada(POSICAO p, ESTADO *e) {
+    resetValidos(e);
     e->grelha[p.ln][p.cl] = e->peca;
+    executaMudanca(e,p);
     proxTurno(e);
     mostrarJogo(e);
 }
 
+
+
 void mostrarJogo(ESTADO * e){
-    showPontuacao(e);
+    //showPontuacao(e);
     printf("Turno de %c\n\n", pecaParaChar(e->peca));
     printa(*e);
     printf("\n");
@@ -134,22 +148,12 @@ int calculaVencedor(ESTADO *e) {
         else return 2;
 }
 
-int pontuacao (ESTADO *e,VALOR p){
-    int i=0,j=0,n=0;
-    for(;i<8;i++){
-        for(;j<8;j++){
-            if(e->grelha[i][j]==p)
-                n++;
-        }
-        j=0;
-    }
-    return n;
-}
 
+/*
 void showPontuacao(ESTADO *e) {
     printf("Pontuacao:\nX:%d\nO:%d\n\n",pontuacao(e,VALOR_X),pontuacao(e,VALOR_O));
 }
-
+*/
 void humanVShuman(ESTADO * e) {
     int opcao = -1;
     int jogador = 1;

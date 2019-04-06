@@ -32,8 +32,7 @@ LPos posValidas(ESTADO * e, VALOR peca) {
         }
         j=0;
     }
-    printList(l);
-    return NULL;
+    return l;
 }
 
 void pcima(ESTADO *e,int l,int c,LPos *t) {
@@ -42,8 +41,8 @@ void pcima(ESTADO *e,int l,int c,LPos *t) {
     if (i!=-1 && i!=l-1) {
         if (e->grelha[i][c] == VAZIA) {
             POSICAO p;
-            p.ln = i+1;
-            p.cl = c+1;
+            p.ln = i;
+            p.cl = c;
             *t = addPos(*t,p);
         }
     }
@@ -55,8 +54,8 @@ void pbaixo(ESTADO *e,int l,int c,LPos *t) {
     if (i!=8 && i!=l+1) {
         if (e->grelha[i][c] == VAZIA) {
             POSICAO p;
-            p.ln = i+1;
-            p.cl = c+1;
+            p.ln = i;
+            p.cl = c;
             *t = addPos(*t,p);
         }
     }
@@ -68,8 +67,8 @@ void pesquerda(ESTADO *e,int l,int c,LPos *t) {
     if (i!=-1 && i!=c-1) {
         if (e->grelha[l][i] == VAZIA) {
             POSICAO p;
-            p.ln = l+1;
-            p.cl = i+1;
+            p.ln = l;
+            p.cl = i;
             *t = addPos(*t,p);
         }
     }
@@ -81,8 +80,8 @@ void pdireita(ESTADO *e,int l,int c,LPos *t) {
     if (i!=8 && i!=c+1) {
         if (e->grelha[l][i] == VAZIA) {
             POSICAO p;
-            p.ln = l+1;
-            p.cl = i+1;
+            p.ln = l;
+            p.cl = i;
             *t = addPos(*t,p);
         }
     }
@@ -94,8 +93,8 @@ void pdiagDC(ESTADO *e,int l,int c,LPos *t) {
     if (j!=8 && j!=c+1 && i!=-1 && i!=l-1) {
         if (e->grelha[i][j] == VAZIA) {
             POSICAO p;
-            p.ln = i+1;
-            p.cl = j+1;
+            p.ln = i;
+            p.cl = j;
             *t = addPos(*t,p);
         }
     }
@@ -107,8 +106,8 @@ void pdiagDB(ESTADO *e,int l,int c,LPos *t) {
     if (j!=8 && j!=c+1 && i!=8 && i!=l+1) {
         if (e->grelha[i][j] == VAZIA) {
             POSICAO p;
-            p.ln = i+1;
-            p.cl = j+1;
+            p.ln = i;
+            p.cl = j;
             *t = addPos(*t,p);
         }
     }
@@ -120,8 +119,8 @@ void pdiagEC(ESTADO *e,int l,int c,LPos *t) {
     if (j!=-1 && j!=c-1 && i!=-1 && i!=l-1) {
         if (e->grelha[i][j] == VAZIA) {
             POSICAO p;
-            p.ln = i+1;
-            p.cl = j+1;
+            p.ln = i;
+            p.cl = j;
             *t = addPos(*t,p);
         }
     }
@@ -133,8 +132,8 @@ void pdiagEB(ESTADO *e,int l,int c,LPos *t) {
     if (j!=-1 && j!=c-1 && i!=8 && i!=l+1) {
         if (e->grelha[i][j] == VAZIA) {
             POSICAO p;
-            p.ln = i+1;
-            p.cl = j+1;
+            p.ln = i;
+            p.cl = j;
             *t = addPos(*t,p);
         }
     }

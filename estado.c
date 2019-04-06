@@ -3,6 +3,8 @@
 //
 #include <stdio.h>
 #include "estado.h"
+#include "validos.h"
+#include "linkedLists.h"
 #include <stdlib.h>
 
 // exemplo de uma função para imprimir o estado (Tabuleiro)
@@ -10,7 +12,8 @@ void printa(ESTADO e)
 {
     char c = ' ';
 
-    printf("  1 2 3 4 5 6 7 8\n");
+    printf("  1 2 3 4 5 6 7 8");
+    printf("\tPontuacao:\n");
 
     int j = 1;
     for (int i = 0; i < 8; i++) {
@@ -29,10 +32,17 @@ void printa(ESTADO e)
                     c = '-';
                     break;
                 }
+                case VALIDO: {
+                    if (e.mostravalidos == 1) c = '.';
+                    else c = '-';
+                    break;
+                }
             }
             printf("%c ", c);
 
         }
+        if (i == 0) printf("\tX: %d",pontuacao(&e,VALOR_X));
+        if (i == 1) printf("\tX: %d",pontuacao(&e,VALOR_O));
         printf("\n");
     }
 
@@ -50,11 +60,42 @@ void initEstado(ESTADO * e) {
     //e.grelha[2][2] = VALOR_X;
 }
 
+int pontuacao (ESTADO *e,VALOR p){
+    int i=0,j=0,n=0;
+    for(;i<8;i++){
+        for(;j<8;j++){
+            if(e->grelha[i][j]==p)
+                n++;
+        }
+        j=0;
+    }
+    return n;
+}
+
 void cleanEstado(ESTADO * e) {
     for (int i = 0; i<8; i++) {
         for (int j = 0; j < 8; j++) {
             e->grelha[i][j] = VAZIA;
         }
+    }
+}
+
+void resetValidos(ESTADO * e){
+    for (int i = 0; i<8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if(e->grelha[i][j] == VALIDO) e->grelha[i][j] = VAZIA;
+        }
+    }
+}
+
+void colocaValidos(ESTADO * e) {
+    LPos l;
+    l = posValidas(e,e->peca);
+    //printList(l);
+    //TODO é de 0 a length??
+    for (int i = 0; i < lengthList(l);i++) {
+        POSICAO p = getPosIndex(l,i);
+        e->grelha[p.ln][p.cl] = VALIDO;
     }
 }
 
@@ -75,21 +116,62 @@ VALOR charParaPeca (char peca){
     else return VAZIA;
 }
 
-POSICAO subtraiVetores(POSICAO * a, POSICAO * b) {
+POSICAO subtraiVetorGrelha(POSICAO * a, int ln, int cl) {
     POSICAO c;
-    c.ln = a->ln - b->ln;
-    c.cl = a->cl - b->cl;
+    c.ln = a->ln - ln;
+    c.cl = a->cl - cl;
     return c;
 }
 
 void normalizaVetor(POSICAO * a){
-    if (a->ln != 0) a->ln = 1;
-    if (a->cl != 0) a->cl = 1;
+    if (a->ln != 0) {
+        if (a->ln > 0) a->ln = 1;
+        else a->ln = -1;
+    }
+    if (a->cl != 0) {
+        if (a->cl > 0) a->cl = 1;
+        else a->cl = -1;
+    }
 }
 
-int isPotencial(POSICAO * a) {
-    if ( (a->ln == 0 && a->cl != 0) || (a->ln != 0 && a->cl == 0) ) return 1;
-    else if (a->ln != 0 && a->ln == a->cl) return 1;
+int isPotencial(POSICAO a) {
+    if ( (a.ln == 0 && a.cl != 0) || (a.ln != 0 && a.cl == 0) ) return 1;
+    else if (a.ln != 0 && a.ln == a.cl) return 1;
     else return 0;
 }
 
+void posParaGrelha(POSICAO *a) {
+    a->cl--;
+    a->ln--;
+}
+
+void executaMudanca(ESTADO * e, POSICAO a){
+    //posParaGrelha(&a);
+    int i,j;
+    for(i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            if (e->grelha[i][j] == e->peca) {
+                POSICAO vetor = subtraiVetorGrelha(&a,i,j);
+                if (isPotencial(vetor)) {
+                    normalizaVetor(&vetor);
+                    auxMudanca(e,i,j,vetor,a);
+                }
+            }
+        }
+    }
+}
+
+void auxMudanca(ESTADO * e, int ln, int cl , POSICAO vetor, POSICAO final) {
+    int i = 0; int initln = ln; int initcl = cl;
+    for (;ln < 8 && cl < 8 && ln >= 0 && cl >= 0 && e->grelha[ln][cl] != VAZIA && (final.ln != ln || final.cl != cl);i++) {
+        ln += vetor.ln;
+        cl += vetor.cl;
+    }
+    if (final.ln == ln && final.cl == cl) {
+        while (initln != final.ln || initcl != final.cl) {
+            e->grelha[initln][initcl] = e->peca;
+            initln+=vetor.ln;
+            initcl+=vetor.cl;
+        }
+    }
+}

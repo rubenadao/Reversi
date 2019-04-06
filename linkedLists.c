@@ -25,6 +25,23 @@ LPos addPos (LPos l, POSICAO p) {
     return n1;
 }
 
+int lengthList(LPos l) {
+    LPos aux = l;
+    int c=0;
+    while(aux != NULL) {
+        c++;
+        aux = aux->prox;
+    }
+    return c;
+}
+
+POSICAO getPosIndex(LPos l, int i) {
+    for (int j = 0; j < i; j++) {
+        l=l->prox;
+    }
+    return l->pos;
+}
+
 void freeList(LPos l) {
     LPos head = l;
     LPos tmp;

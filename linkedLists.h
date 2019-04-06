@@ -15,6 +15,8 @@ typedef struct slist {
 
 void printList(LPos l);
 LPos addPos (LPos l, POSICAO p);
+int lengthList(LPos l);
+POSICAO getPosIndex(LPos l, int i);
 void freeList(LPos l);
 
 #endif //REVERSI_LINKEDLISTS_H
