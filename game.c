@@ -30,7 +30,11 @@ void interpretador(char * comando, ESTADO *e) {
         case 'L':
             sscanf(comando,"%s %s",opcode,fstArg);
             lerFicheiro(fstArg,e);
-            if (e->iniciado) mostrarJogo(e);
+            //TODO este if??
+            if (e->iniciado) {
+                mostrarJogo(e);
+                e->mostravalidos = 0;
+            }
             break;
         case 'E':
             sscanf(comando,"%s %s",opcode,fstArg);

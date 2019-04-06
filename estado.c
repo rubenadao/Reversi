@@ -42,7 +42,7 @@ void printa(ESTADO e)
 
         }
         if (i == 0) printf("\tX: %d",pontuacao(&e,VALOR_X));
-        if (i == 1) printf("\tX: %d",pontuacao(&e,VALOR_O));
+        if (i == 1) printf("\tO: %d",pontuacao(&e,VALOR_O));
         printf("\n");
     }
 
@@ -136,7 +136,7 @@ void normalizaVetor(POSICAO * a){
 
 int isPotencial(POSICAO a) {
     if ( (a.ln == 0 && a.cl != 0) || (a.ln != 0 && a.cl == 0) ) return 1;
-    else if (a.ln != 0 && a.ln == a.cl) return 1;
+    else if (a.ln != 0 && abs(a.ln) == abs(a.cl)) return 1;
     else return 0;
 }
 

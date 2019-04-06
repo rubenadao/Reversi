@@ -3,6 +3,8 @@
 
 CMakeFiles/Reversi.dir/estado.c.obj: ../estado.c
 CMakeFiles/Reversi.dir/estado.c.obj: ../estado.h
+CMakeFiles/Reversi.dir/estado.c.obj: ../linkedLists.h
+CMakeFiles/Reversi.dir/estado.c.obj: ../validos.h
 
 CMakeFiles/Reversi.dir/file_manager.c.obj: ../estado.h
 CMakeFiles/Reversi.dir/file_manager.c.obj: ../file_manager.c
