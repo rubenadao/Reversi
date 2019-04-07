@@ -24,7 +24,7 @@ void interpretador(char * comando, ESTADO *e) {
         case 'N':
             sscanf(comando,"%s %s",opcode,fstArg);
             if ( charParaPeca(toupper(fstArg[0])) != VAZIA  ) {
-                novoJogo(charParaPeca(toupper(fstArg[0])),e);
+                novoJogo(charParaPeca(toupper(fstArg[0])),e,'0');
             } else printf("Peca invalida!\n");
             break;
         case 'L':
@@ -68,6 +68,7 @@ void interpretador(char * comando, ESTADO *e) {
             break;
         case 'S':
             if (e->iniciado) {
+                resetValidos(e);
                 e->mostravalidos = 1;
                 colocaValidos(e);
                 mostrarJogo(e);
@@ -94,15 +95,20 @@ void interpretador(char * comando, ESTADO *e) {
     }
 }
 
-void novoJogo(VALOR peca, ESTADO *e) {
+void novoJogo(VALOR peca, ESTADO *e, char modo) {
     cleanEstado(e);
     initEstado(e);
-    e->modo = 0;
+    e->modo = modo;
     e->mostravalidos = 0;
     //TODO RUSSO (acrescentar smpEstado inicial ao historico)
     e->historico = NULL;
     e->peca = peca;
     mostrarJogo(e);
+    /*
+    if (e->modo == '1') {
+
+    }
+     */
 }
 
 void novaJogada(POSICAO p, ESTADO *e) {
@@ -112,9 +118,12 @@ void novaJogada(POSICAO p, ESTADO *e) {
     proxTurno(e);
     //TODO RUSSO (acrescentar smpEstado ao historico)
     mostrarJogo(e);
+    /*
+    if (e->modo == '1') {
+
+    }
+     */
 }
-
-
 
 void mostrarJogo(ESTADO * e){
     //TODO se usar esta linha eliminar as "\n\n" das outras
@@ -171,6 +180,8 @@ void showPontuacao(ESTADO *e) {
     printf("Pontuacao:\nX:%d\nO:%d\n\n",pontuacao(e,VALOR_X),pontuacao(e,VALOR_O));
 }
 */
+
+
 
 void humanVShuman(ESTADO * e) {
     int opcao = -1;
