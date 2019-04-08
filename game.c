@@ -82,9 +82,7 @@ void interpretador(char * comando, ESTADO *e) {
             break;
         case 'U':
             if (e->iniciado) {
-                printStack(e->historico);
-                e->historico=popS(e->historico,e);
-                mostrarJogo(e);
+                //TODO RUSSO;
             } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'A':
@@ -102,16 +100,8 @@ void novoJogo(VALOR peca, ESTADO *e, char modo) {
     initEstado(e);
     e->modo = modo;
     e->mostravalidos = 0;
+    //TODO RUSSO (acrescentar smpEstado inicial ao historico)
     e->historico = NULL;
-    smpESTADO s;
-    s.peca=e->peca;
-    int i=0,j=0;
-    for(i;i<8;i++) {
-        for(j;j<8;j++)
-            s.grelha[i][j]=e->grelha[i][j];
-        j=0;
-    }
-    e->historico = pushS(e->historico,s);
     e->peca = peca;
     mostrarJogo(e);
     /*
@@ -126,16 +116,7 @@ void novaJogada(POSICAO p, ESTADO *e) {
     e->grelha[p.ln][p.cl] = e->peca;
     executaMudanca(e,p);
     proxTurno(e);
-    smpESTADO s;
-    s.peca=e->peca;
-    int i=0,j=0;
-    for(i;i<8;i++) {
-        for(j;j<8;j++)
-            s.grelha[i][j]=e->grelha[i][j];
-        j=0;
-    }
-    e->historico = pushS(e->historico,s);
-    printStack(e->historico);
+    //TODO RUSSO (acrescentar smpEstado ao historico)
     mostrarJogo(e);
     /*
     if (e->modo == '1') {
@@ -159,7 +140,6 @@ void startEngine() {
     //TODO porquê {0}?
     ESTADO e = {0};
     e.iniciado = 0;
-    e.historico = NULL;
     //TODO Fazer dinamico??
     char comando[100];
     comando[0] = '1';
