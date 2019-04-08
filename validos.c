@@ -31,7 +31,6 @@ void initDirecoes(POSICAO direcoes []) {
 
 //TODO Vazia ou Valido
 LPos posValidas(ESTADO * e, VALOR peca) {
-    printf("cheguei\n");
     LPos l = NULL;
     POSICAO direcoes[8];
     initDirecoes(direcoes);
