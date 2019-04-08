@@ -17,11 +17,16 @@ STACK pushS(STACK l, smpESTADO e) {
 
 STACK popS(STACK l, ESTADO *e) {
     if (l != NULL) {
-        //TODO RUSSO
-
         STACK head = l;
         l = l->prox;
         free(head);
+        e->peca=(l->est).peca;
+        int i=0,j=0;
+        for(i;i<8;i++) {
+            for(j;j<8;j++)
+                e->grelha[i][j]=(l->est).grelha[i][j];
+            j=0;
+        }
         return l;
     }
 }

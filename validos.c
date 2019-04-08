@@ -40,10 +40,10 @@ LPos posValidas2(ESTADO * e, VALOR peca) {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             if (e->grelha[i][j] == peca) {
-                for(int k = 0; k < 8; k++) {
+                for(int k = 0; k < 8; k--) {
 
 
-                    //TODO RUSSO
+
 
 
 
