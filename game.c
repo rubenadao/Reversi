@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <ctype.h>
 #include "game.h"
 #include "estado.h"
@@ -86,6 +87,7 @@ void interpretador(char * comando, ESTADO *e) {
             } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'A':
+            botfacil (e);
             break;
         case 'Q':
             exit(0);
@@ -182,6 +184,25 @@ void showPontuacao(ESTADO *e) {
 */
 
 
+void botfacil (ESTADO *e){
+    LPos l; int i; int x; POSICAO pos;
+
+    l= posValidas(e, e->peca);
+    i = lengthList(l);
+    x = (rand() % i);
+
+    pos= getPosIndex(l , x);
+
+    resetValidos(e);
+
+    e->grelha[pos.ln][pos.cl] = e->peca;
+
+    executaMudanca(e,pos);
+
+    proxTurno(e);
+
+    mostrarJogo(e);
+}
 
 void humanVShuman(ESTADO * e) {
     int opcao = -1;
