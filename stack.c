@@ -16,19 +16,20 @@ STACK pushS(STACK l, smpESTADO e) {
 }
 
 STACK popS(STACK l, ESTADO *e) {
-    if (l != NULL) {
+    if (l != NULL && l->prox != NULL) {
         STACK head = l;
         l = l->prox;
         free(head);
-        e->peca=(l->est).peca;
+        e->peca=l->est.peca;
         int i=0,j=0;
-        for(i;i<8;i++) {
-            for(j;j<8;j++)
+        for(;i<8;i++) {
+            for(;j<8;j++)
                 e->grelha[i][j]=(l->est).grelha[i][j];
             j=0;
         }
+        printf("Jogada Desfeita!\n\n");
         return l;
-    }
+    } else printf("Nao existem jogadas anteriores!\n\n");
 }
 
 void printStack(STACK s) {

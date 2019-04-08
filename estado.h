@@ -42,6 +42,7 @@ typedef struct estado {
     //TODO pode ser desnecessário
     int iniciado;
     int mostravalidos;
+    int nivelBot;
     STACK historico;
 
     //TODO usar notação stack pointer

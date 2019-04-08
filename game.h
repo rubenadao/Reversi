@@ -8,10 +8,13 @@
 
 void interpretador(char * comando, ESTADO *e);
 void novoJogo(VALOR peca, ESTADO *e, char modo);
+void novoJogoB(ESTADO *e);
 void novaJogada(POSICAO p, ESTADO *e);
+void jogadaBot(ESTADO *e);
+void addHistorico(ESTADO *e);
 void mostrarJogo(ESTADO * e);
 void startEngine();
-void botfacil (ESTADO *e);
+void botFacil (ESTADO *e);
 //void confirmarLeitura(char * ficheiro);
 VALOR pecaOposta(VALOR p);
 int ganhou (ESTADO * e);

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <ctype.h>
 #include "game.h"
 #include "estado.h"
@@ -11,6 +12,7 @@
 #include "linkedLists.h"
 #include "validos.h"
 #include "file_manager.h"
+#include <zconf.h>
 
 #define MAX_BUFFER 100
 
@@ -68,7 +70,6 @@ void interpretador(char * comando, ESTADO *e) {
             break;
         case 'S':
             if (e->iniciado) {
-                resetValidos(e);
                 e->mostravalidos = 1;
                 colocaValidos(e);
                 mostrarJogo(e);
@@ -82,10 +83,17 @@ void interpretador(char * comando, ESTADO *e) {
             break;
         case 'U':
             if (e->iniciado) {
-                //TODO RUSSO;
+                e->historico=popS(e->historico,e);
+                mostrarJogo(e);
             } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'A':
+            //TODO caso n seja nem x nem ou nivel que n existe
+            sscanf(comando,"%s %s %s",opcode,fstArg,sndArg);
+            e->nivelBot = (int) (sndArg[0]-48);
+            if (toupper(fstArg[0]) != 'X') {
+                novoJogoB(e);
+            } else novoJogo(VALOR_X,e,'1');
             break;
         case 'Q':
             exit(0);
@@ -99,16 +107,23 @@ void novoJogo(VALOR peca, ESTADO *e, char modo) {
     cleanEstado(e);
     initEstado(e);
     e->modo = modo;
-    e->mostravalidos = 0;
-    //TODO RUSSO (acrescentar smpEstado inicial ao historico)
-    e->historico = NULL;
     e->peca = peca;
+    e->mostravalidos = 0;
+    e->historico = NULL;
+    addHistorico(e);
     mostrarJogo(e);
-    /*
-    if (e->modo == '1') {
+}
 
-    }
-     */
+//TODO Função desnecessária ou codigo desnec.
+void novoJogoB(ESTADO *e) {
+    cleanEstado(e);
+    initEstado(e);
+    e->modo = '1';
+    e->peca = VALOR_X;
+    e->mostravalidos = 0;
+    e->historico = NULL;
+    mostrarJogo(e);
+    jogadaBot(e);
 }
 
 void novaJogada(POSICAO p, ESTADO *e) {
@@ -116,13 +131,31 @@ void novaJogada(POSICAO p, ESTADO *e) {
     e->grelha[p.ln][p.cl] = e->peca;
     executaMudanca(e,p);
     proxTurno(e);
-    //TODO RUSSO (acrescentar smpEstado ao historico)
+    addHistorico(e);
     mostrarJogo(e);
-    /*
-    if (e->modo == '1') {
+    if (e->modo == '1') jogadaBot(e);
+}
 
-    }
+void jogadaBot(ESTADO *e){
+    printf("A Processar jogada..\n");
+    //TODO Pode ser não especifico
+    sleep(1);
+    if (e->nivelBot == 1) botFacil(e);
+    /*
+     * else
      */
+}
+
+void addHistorico(ESTADO *e) {
+    smpESTADO s;
+    s.peca = e->peca;
+    int i=0,j=0;
+    for(;i<8;i++) {
+        for(;j<8;j++)
+            s.grelha[i][j]=e->grelha[i][j];
+        j=0;
+    }
+    e->historico = pushS(e->historico,s);
 }
 
 void mostrarJogo(ESTADO * e){
@@ -175,23 +208,17 @@ int calculaVencedor(ESTADO *e) {
         else return 2;
 }
 
-/*
-void showPontuacao(ESTADO *e) {
-    printf("Pontuacao:\nX:%d\nO:%d\n\n",pontuacao(e,VALOR_X),pontuacao(e,VALOR_O));
+
+void botFacil (ESTADO *e){
+    LPos l; int i; int x; POSICAO pos;
+    l= posValidas(e, e->peca);
+    i = lengthList(l);
+    x = (rand() % i);
+    pos= getPosIndex(l , x);
+    resetValidos(e);
+    e->grelha[pos.ln][pos.cl] = e->peca;
+    executaMudanca(e,pos);
+    proxTurno(e);
+    mostrarJogo(e);
 }
-*/
 
-
-
-void humanVShuman(ESTADO * e) {
-    int opcao = -1;
-    int jogador = 1;
-    while (opcao != 0) {
-        printa(*e);
-        printf("\nJogador %d:\n",jogador);
-        scanf("%d",&opcao);
-
-        if (jogador == 1) jogador++;
-        else jogador--;
-    }
-}

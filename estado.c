@@ -90,6 +90,7 @@ void resetValidos(ESTADO * e){
 }
 
 void colocaValidos(ESTADO * e) {
+    resetValidos(e);
     LPos l;
     l = posValidas(e,e->peca);
     //printList(l);
