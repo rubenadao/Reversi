@@ -12,6 +12,7 @@
 #include "linkedLists.h"
 #include "validos.h"
 #include "file_manager.h"
+#include "minmax.h"
 #include <zconf.h>
 
 #define MAX_BUFFER 100
@@ -76,10 +77,21 @@ void interpretador(char * comando, ESTADO *e) {
             } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'H':
-            if (1) {
-                POSICAO p[8];
-                initDirecoes(p);
-            }
+            //TODO Melhorar isto
+            if (e->iniciado) {
+                //TODO POR ISTO NUMA FUNÇÃO E USAR TBM NO 'A'
+                smpESTADO s;
+                s.peca = e->peca;
+                int i=0,j=0;
+                for(;i<8;i++) {
+                    for(;j<8;j++)
+                        s.grelha[i][j]=e->grelha[i][j];
+                    j=0;
+                }
+                POSICAO p;
+                p = minmax2(s,5,-65,65,1,e->peca,1).posInit;
+                printWithH(*e,p);
+            } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'U':
             if (e->iniciado) {
@@ -94,6 +106,38 @@ void interpretador(char * comando, ESTADO *e) {
             if (toupper(fstArg[0]) != 'X') {
                 novoJogoB(e);
             } else novoJogo(VALOR_X,e,'1');
+            break;
+        case 'M':
+            if (1){
+                smpESTADO s;
+                s.peca = e->peca;
+                int i=0,j=0;
+                for(;i<8;i++) {
+                    for(;j<8;j++)
+                        s.grelha[i][j]=e->grelha[i][j];
+                    j=0;
+                }
+                int f;
+                smpESTADO f2 = {0};
+                f = minmax(&s,5,-65,65,1,e->peca);
+                printf("f:%d\n",f);
+                printf("---------------------\n");
+                f2 = minmax2(s,5,-65,65,1,e->peca,1);
+                printf("f2:%d\n",f2.eval);
+                printf("jogada:(%d,%d)\n",f2.posInit.ln,f2.posInit.cl);
+            }
+            break;
+        case 'T':
+            testeBots(e);
+            break;
+        case 'R':
+            if (ganhou(e) != -1) {
+                printf("Acabou\n");
+            }
+            else printf("Nao Acabou\n");
+            //if (posValidas(e,e->peca) == NULL) printf("E NULL\n");
+            //printList(posValidas(e,e->peca));
+            //printf("\n Validas\n");
             break;
         case 'Q':
             exit(0);
@@ -111,7 +155,7 @@ void novoJogo(VALOR peca, ESTADO *e, char modo) {
     e->mostravalidos = 0;
     e->historico = NULL;
     addHistorico(e);
-    mostrarJogo(e);
+    //mostrarJogo(e);
 }
 
 //TODO Função desnecessária ou codigo desnec.
@@ -125,6 +169,70 @@ void novoJogoB(ESTADO *e) {
     mostrarJogo(e);
     jogadaBot(e);
 }
+
+//TODO Invocação de posValidas provoca MemoryLeak
+
+void testeBots(ESTADO *e) {
+    for(int k = 0; k < 5; k++) {
+        float inven = 0.0;
+        int vitF = 0, vitD = 0, emp = 0;
+        for (int i = 0; i < 200; i++) {
+            novoJogo(VALOR_X,e,'1');
+            while (ganhou(e) == -1) {
+                LPos lx =posValidas(e, VALOR_X);
+                LPos lo = posValidas(e ,VALOR_O);
+                if (e->peca == VALOR_X && lx != NULL) botFacil(e);
+                else if (e->peca == VALOR_X) {
+                    e->peca = VALOR_O;
+                    botDificil(e);
+                }
+                else if (e->peca == VALOR_O && lo != NULL) botDificil(e);
+                else if (e->peca == VALOR_O) {
+                    e->peca = VALOR_X;
+                    botFacil(e);
+                }
+                freeList(lx);
+                freeList(lo);
+            }
+            int vitoria = ganhou(e);
+
+            if (vitoria == 0) printf("%d - BOT FACIL GANHOU\n",i+1);
+            else if (vitoria == 1) printf("%d - BOT DIFICIL GANHOU\n",i+1);
+            else printf("%d - EMPATE\n",i+1);
+
+            if (vitoria == 0) vitF++;
+            else if (vitoria == 1) vitD++;
+            else emp++;
+        }
+        printf("Vitorias de Dificil:%d\n",vitD);
+        printf("Empates:%d\n",emp);
+        inven = ((vitD+emp)/200.0) *100;
+        printf("Invencibilidade:%f\n",inven);
+    }
+
+}
+
+/*
+void testeBots(ESTADO *e) {
+    novoJogo(VALOR_X,e,'1');
+    while (ganhou(e) == -1) {
+        if (e->peca == VALOR_X && posValidas(e,VALOR_X) != NULL) botFacil(e);
+        else if (e->peca == VALOR_X) {
+            e->peca = VALOR_O;
+            botDificil(e);
+        }
+        else if (e->peca == VALOR_O && posValidas(e,VALOR_O) != NULL) botDificil(e);
+        else if (e->peca == VALOR_O) {
+            e->peca = VALOR_X;
+            botFacil(e);
+        }
+    }
+    int vitoria = ganhou(e);
+    if (vitoria == 0) printf("BOT FACIL GANHOU\n");
+    else if (vitoria == 1) printf("BOT DIFICIL GANHOU\n");
+    else printf("EMPATE\n");
+}
+*/
 
 void novaJogada(POSICAO p, ESTADO *e) {
     resetValidos(e);
@@ -141,6 +249,7 @@ void jogadaBot(ESTADO *e){
     //TODO Pode ser não especifico
     sleep(1);
     if (e->nivelBot == 1) botFacil(e);
+    else if (e->nivelBot == 3) botDificil(e);
     /*
      * else
      */
@@ -174,31 +283,49 @@ void startEngine() {
     ESTADO e = {0};
     e.iniciado = 0;
     //TODO Fazer dinamico??
-    char comando[100];
+    char comando[MAX_BUFFER];
     comando[0] = '1';
     printf("Cmd:\n");
-    while(fgets(comando, 100, stdin)) {
+    while(fgets(comando, MAX_BUFFER, stdin)) {
         interpretador(comando, &e);
         printf("Cmd:\n");
     }
 }
-
 
 VALOR pecaOposta(VALOR p) {
     if (p==VALOR_X) return VALOR_O;
     else return VALOR_X;
 }
 
+//TODO Invocação de posValidas provoca MemoryLeak
 int ganhou(ESTADO * e) {
+    /*
+    if (posValidas(e ,VALOR_O) == NULL) printf("O E NULL\n");
+    if (posValidas(e ,VALOR_X) == NULL) printf("X E NULL\n");
+    printf("Jog. O:\n");
+    printList(posValidas(e,VALOR_O));
+    printf("Jog. X:\n");
+    printList(posValidas(e,VALOR_X));
+    */
     int i = 0, j = 0;
+    LPos lx =posValidas(e, VALOR_X);
+    LPos lo = posValidas(e ,VALOR_O);
     for (; i<8 && e->grelha [i][j] != VAZIA ; i++) {
         for (; j<8 && e->grelha [i][j] != VAZIA ; j++);
         j=0;
     }
-    if (i==8)  return calculaVencedor(e);
-    if ((posValidas(e , VALOR_O )== NULL &&  (posValidas(e, VALOR_X)== NULL))) {
-        calculaVencedor(e);
+    if (i==8)  {
+        freeList(lx);
+        freeList(lo);
+        return calculaVencedor(e);
     }
+    if (lx == NULL  && lo == NULL) {
+        freeList(lx);
+        freeList(lo);
+        return calculaVencedor(e);
+    }
+    freeList(lx);
+    freeList(lo);
     return -1;
 }
 
@@ -210,15 +337,57 @@ int calculaVencedor(ESTADO *e) {
 
 
 void botFacil (ESTADO *e){
+    //time_t t;
+    //srand((unsigned) time(&t));
     LPos l; int i; int x; POSICAO pos;
     l= posValidas(e, e->peca);
     i = lengthList(l);
+    //TODO é preciso usar seed?
     x = (rand() % i);
-    pos= getPosIndex(l , x);
+    pos = getPosIndex(l , x);
+    resetValidos(e);
+    e->grelha[pos.ln][pos.cl] = e->peca;
+    executaMudanca(e,pos);
+    proxTurno(e);
+    //mostrarJogo(e);
+}
+
+void botMedio (ESTADO *e) {
+    smpESTADO s; POSICAO pos;
+    s.peca = e->peca;
+    int i=0,j=0;
+    for(;i<8;i++) {
+        for(;j<8;j++)
+            s.grelha[i][j]=e->grelha[i][j];
+        j=0;
+    }
+    smpESTADO f2 = {0};
+    f2 = minmax2(s,1,-65,65,1,e->peca,1);
+    pos = f2.posInit;
     resetValidos(e);
     e->grelha[pos.ln][pos.cl] = e->peca;
     executaMudanca(e,pos);
     proxTurno(e);
     mostrarJogo(e);
 }
+
+void botDificil (ESTADO *e) {
+    smpESTADO s; POSICAO pos;
+    s.peca = e->peca;
+    int i=0,j=0;
+    for(;i<8;i++) {
+        for(;j<8;j++)
+            s.grelha[i][j]=e->grelha[i][j];
+        j=0;
+    }
+    smpESTADO f2 = {0};
+    f2 = minmax2(s,5,-65,65,1,e->peca,1);
+    pos = f2.posInit;
+    resetValidos(e);
+    e->grelha[pos.ln][pos.cl] = e->peca;
+    executaMudanca(e,pos);
+    proxTurno(e);
+    //mostrarJogo(e);
+}
+
 

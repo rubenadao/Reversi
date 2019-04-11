@@ -19,10 +19,12 @@ Definição do estado i.e. tabuleiro. Representação matricial do tabuleiro.
 // definição de valores possiveis no tabuleiro
 typedef enum {VAZIA, VALOR_X, VALOR_O, VALIDO} VALOR;
 
-
+//TODO Está a ser usado para duas coisas diferentes
 typedef struct simple_estado {
     VALOR peca; // peça do jogador que vai jogar!
     VALOR grelha[8][8];
+    POSICAO posInit;
+    int eval;
 } smpESTADO;
 
 typedef struct stack *STACK;
@@ -46,11 +48,11 @@ typedef struct estado {
     STACK historico;
 
     //TODO usar notação stack pointer
-
 } ESTADO;
 
 
 void printa(ESTADO);
+void printWithH(ESTADO e, POSICAO hint);
 void initEstado(ESTADO * e);
 int pontuacao (ESTADO *e,VALOR p);
 void cleanEstado(ESTADO * e);

@@ -49,6 +49,52 @@ void printa(ESTADO e)
 
 }
 
+void printWithH(ESTADO e, POSICAO hint){
+    char c = ' '; int ln, cl;
+
+    printf("  1 2 3 4 5 6 7 8");
+    printf("\tPontuacao:\n");
+    ln = hint.ln;
+    cl = hint.cl;
+
+
+    int k = 1;
+    for (int i = 0; i < 8; i++) {
+        printf("%d ",k++);
+        for (int j = 0; j < 8; j++) {
+            if (i == ln && j ==  cl) {
+                c = '?';
+            } else {
+                switch (e.grelha[i][j]) {
+                    case VALOR_O: {
+                        c = 'O';
+                        break;
+                    }
+                    case VALOR_X: {
+                        c = 'X';
+                        break;
+                    }
+                    case VAZIA: {
+                        c = '-';
+                        break;
+                    }
+                    case VALIDO: {
+                        if (e.mostravalidos == 1) c = '.';
+                        else c = '-';
+                        break;
+                    }
+                }
+            }
+            printf("%c ", c);
+
+        }
+        if (i == 0) printf("\tX: %d",pontuacao(&e,VALOR_X));
+        if (i == 1) printf("\tO: %d",pontuacao(&e,VALOR_O));
+        if (i == 3) printf("\tTurno: %c",pecaParaChar(e.peca));
+        printf("\n");
+    }
+}
+
 void initEstado(ESTADO * e) {
     // estado inicial do tabuleiro. Inicio do jogo!
     e->grelha[3][4] = VALOR_X;
