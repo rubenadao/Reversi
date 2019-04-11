@@ -155,7 +155,7 @@ void novoJogo(VALOR peca, ESTADO *e, char modo) {
     e->mostravalidos = 0;
     e->historico = NULL;
     addHistorico(e);
-    //mostrarJogo(e);
+    mostrarJogo(e);
 }
 
 //TODO Função desnecessária ou codigo desnec.
@@ -299,14 +299,6 @@ VALOR pecaOposta(VALOR p) {
 
 //TODO Invocação de posValidas provoca MemoryLeak
 int ganhou(ESTADO * e) {
-    /*
-    if (posValidas(e ,VALOR_O) == NULL) printf("O E NULL\n");
-    if (posValidas(e ,VALOR_X) == NULL) printf("X E NULL\n");
-    printf("Jog. O:\n");
-    printList(posValidas(e,VALOR_O));
-    printf("Jog. X:\n");
-    printList(posValidas(e,VALOR_X));
-    */
     int i = 0, j = 0;
     LPos lx =posValidas(e, VALOR_X);
     LPos lo = posValidas(e ,VALOR_O);
@@ -337,8 +329,6 @@ int calculaVencedor(ESTADO *e) {
 
 
 void botFacil (ESTADO *e){
-    //time_t t;
-    //srand((unsigned) time(&t));
     LPos l; int i; int x; POSICAO pos;
     l= posValidas(e, e->peca);
     i = lengthList(l);
@@ -349,7 +339,7 @@ void botFacil (ESTADO *e){
     e->grelha[pos.ln][pos.cl] = e->peca;
     executaMudanca(e,pos);
     proxTurno(e);
-    //mostrarJogo(e);
+    mostrarJogo(e);
 }
 
 void botMedio (ESTADO *e) {
@@ -387,7 +377,7 @@ void botDificil (ESTADO *e) {
     e->grelha[pos.ln][pos.cl] = e->peca;
     executaMudanca(e,pos);
     proxTurno(e);
-    //mostrarJogo(e);
+    mostrarJogo(e);
 }
 
 
