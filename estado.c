@@ -156,7 +156,6 @@ void proxTurno(ESTADO * e) {
 char pecaParaChar(VALOR peca){
     if (peca == VALOR_O) return  'O';
     else if (peca == VALOR_X) return 'X';
-    else if (peca == VALIDO) return '.';
     else return '-';
 }
 
