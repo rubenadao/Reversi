@@ -44,7 +44,6 @@ void escreverFicheiro(char * ficheiro, ESTADO *e){
         printf("Ainda nao iniciou um jogo!\n\n");
         return;
     }
-    strcat(ficheiro,".txt");
     FILE* file = fopen(ficheiro, "w");
     char s[4];
     if (e->modo == '0') s[0] = 'M';
