@@ -10,7 +10,6 @@
 #include <stdlib.h>
 
 void lerFicheiro(char ficheiro[], ESTADO *e) {
-    strcat(ficheiro,".txt");
     FILE* file = fopen(ficheiro, "r");
     char line[256];
     if (file) {
