@@ -245,9 +245,7 @@ void novaJogada(POSICAO p, ESTADO *e) {
 }
 
 void jogadaBot(ESTADO *e){
-    printf("A Processar jogada..\n");
     //TODO Pode ser não especifico
-    sleep(1);
     if (e->nivelBot == 1) botFacil(e);
     else if (e->nivelBot == 3) botDificil(e);
     /*
