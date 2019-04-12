@@ -13,7 +13,6 @@
 #include "validos.h"
 #include "file_manager.h"
 #include "minmax.h"
-#include <zconf.h>
 
 #define MAX_BUFFER 100
 
