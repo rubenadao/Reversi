@@ -247,6 +247,7 @@ void novaJogada(POSICAO p, ESTADO *e) {
 void jogadaBot(ESTADO *e){
     //TODO Pode ser não especifico
     if (e->nivelBot == 1) botFacil(e);
+    else if (e->nivelBot == 2) botMedio(e);
     else if (e->nivelBot == 3) botDificil(e);
     /*
      * else
