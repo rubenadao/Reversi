@@ -132,6 +132,19 @@ void interpretador(char * comando, ESTADO *e) {
         case 'R':
             botFacil(e);
             break;
+        case '?':
+            printf("N  Para novo jogo em que o primeiro a jogar é o jogador com peça.\n");
+            printf("L  Para ler um jogo de ficheiro. Em modo automático (A), após leitura do ficheiro, o próximo jogador a jogar é sempre o humano!\n");
+            printf("E  Escrever em ficheiro estado do jogo.\n");
+            printf("J <L> <C>  Jogar peça atual na posição (L,C). O comando J 1 1 pede para colocar a peça atual no canto superior esquerdo!\n");
+            printf("S  Para imprimir um ponto ‘.’ nas posições com jogada válida.\n");
+            printf("H  Para sugestão de jogada. Deve ser colocado um ‘?’ no sitio sugerido.\n");
+            printf("U  Para desfazer a última jogada (Undo). Isto tem de permitir desfazer até ao estado inicial do jogo!\n");
+            printf("A <peça> <nível>  Novo jogo contra ‘bot’ (computador) em que o ‘bot’ joga com a peça <peça> num nível de dificuldade <nível> (3 níveis possíveis).");
+            printf("Neste modo quem joga primeiro é sempre o jogador com a peça preta ‘X’.\n");
+            printf("Q  Para Sair!\n");
+            if (e->iniciado)
+                mostrarJogo(e);
         case 'Q':
             exit(0);
         default:
@@ -240,7 +253,10 @@ void novaJogada(POSICAO p, ESTADO *e) {
         processFim(e);
     }
 }
-
+/**
+ *
+ * @param e
+ */
 void jogadaBot(ESTADO *e){
     //TODO Pode ser não especifico
     if (e->nivelBot == 1) botFacil(e);
