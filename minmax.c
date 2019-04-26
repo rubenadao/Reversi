@@ -12,7 +12,17 @@
 
 //TODO Caso de acabar jogo
 
-
+/**
+ * descricao da funcao
+ * @param est - estado do tabuleiro
+ * @param depth
+ * @param alpha
+ * @param beta
+ * @param maximizante
+ * @param pecaMax
+ * @param init
+ * @return
+ */
 smpESTADO minmax2(smpESTADO est, int depth, int alpha, int beta, int maximizante, VALOR pecaMax, int init) {
     //TODO listas de LPos com posições repetidas afetam desempenho
     //TODO Fzer free ás listas (sempre que invoco posValidas em todo o código)

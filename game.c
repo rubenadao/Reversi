@@ -95,7 +95,7 @@ void interpretador(char * comando, ESTADO *e) {
         case 'U':
             if (e->iniciado) {
                 e->historico=popS(e->historico,e);
-                mostrarJogo(e);
+                if (e->iniciado) mostrarJogo(e);
             } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'A':
@@ -130,13 +130,7 @@ void interpretador(char * comando, ESTADO *e) {
             testeBots(e);
             break;
         case 'R':
-            if (ganhou(e) != -1) {
-                printf("Acabou\n");
-            }
-            else printf("Nao Acabou\n");
-            //if (posValidas(e,e->peca) == NULL) printf("E NULL\n");
-            //printList(posValidas(e,e->peca));
-            //printf("\n Validas\n");
+            botFacil(e);
             break;
         case 'Q':
             exit(0);
@@ -234,13 +228,17 @@ void testeBots(ESTADO *e) {
 */
 
 void novaJogada(POSICAO p, ESTADO *e) {
-    resetValidos(e);
-    e->grelha[p.ln][p.cl] = e->peca;
-    executaMudanca(e,p);
-    proxTurno(e);
-    addHistorico(e);
-    mostrarJogo(e);
-    if (e->modo == '1') jogadaBot(e);
+    if (ganhou(e) == -1) {
+        resetValidos(e);
+        e->grelha[p.ln][p.cl] = e->peca;
+        executaMudanca(e,p);
+        proxTurno(e);
+        addHistorico(e);
+        mostrarJogo(e);
+        if (e->modo == '1') jogadaBot(e);
+    } else {
+        processFim(e);
+    }
 }
 
 void jogadaBot(ESTADO *e){
@@ -295,10 +293,21 @@ VALOR pecaOposta(VALOR p) {
     else return VALOR_X;
 }
 
+void processFim(ESTADO *e){
+    int venc = calculaVencedor(e);
+    if (venc == 0) {
+        printf("VENCEDOR: X\n");
+    } else if (venc == 1) {
+        printf("VENCEDOR: O\n");
+    } else printf("EMPATE\n");
+    e->iniciado = 0;
+}
+
+
 //TODO Invocação de posValidas provoca MemoryLeak
 int ganhou(ESTADO * e) {
     int i = 0, j = 0;
-    LPos lx =posValidas(e, VALOR_X);
+    LPos lx = posValidas(e, VALOR_X);
     LPos lo = posValidas(e ,VALOR_O);
     for (; i<8 && e->grelha [i][j] != VAZIA ; i++) {
         for (; j<8 && e->grelha [i][j] != VAZIA ; j++);
@@ -327,6 +336,10 @@ int calculaVencedor(ESTADO *e) {
 
 
 void botFacil (ESTADO *e){
+    if (ganhou(e) == -1) {
+
+
+
     LPos l; int i; int x; POSICAO pos;
     l= posValidas(e, e->peca);
     i = lengthList(l);
@@ -338,6 +351,10 @@ void botFacil (ESTADO *e){
     executaMudanca(e,pos);
     proxTurno(e);
     mostrarJogo(e);
+
+    } else {
+        processFim(e);
+    }
 }
 
 void botMedio (ESTADO *e) {

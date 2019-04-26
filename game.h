@@ -17,6 +17,7 @@ void mostrarJogo(ESTADO * e);
 void startEngine();
 //void confirmarLeitura(char * ficheiro);
 VALOR pecaOposta(VALOR p);
+void processFim(ESTADO *e);
 int ganhou (ESTADO * e);
 int calculaVencedor(ESTADO *e);
 void botFacil (ESTADO *e);
