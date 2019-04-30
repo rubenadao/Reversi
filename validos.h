@@ -7,13 +7,6 @@
 #include "linkedLists.h"
 void initDirecoes(POSICAO direcoes []);
 LPos posValidas(ESTADO * e, VALOR peca);
-void pcima(ESTADO *e,int l,int c,LPos *t);
-void pbaixo(ESTADO *e,int l,int c,LPos *t);
-void pesquerda(ESTADO *e,int l,int c,LPos *t);
-void pdireita(ESTADO *e,int l,int c,LPos *t);
-void pdiagDC(ESTADO *e,int l,int c,LPos *t);
-void pdiagDB(ESTADO *e,int l,int c,LPos *t);
-void pdiagEC(ESTADO *e,int l,int c,LPos *t);
-void pdiagEB(ESTADO *e,int l,int c,LPos *t);
+int posExiste(LPos l, int ln, int cl);
 
 #endif //REVERSI_VALIDOS_H

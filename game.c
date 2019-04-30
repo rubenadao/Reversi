@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include <math.h>
 #include "game.h"
 #include "estado.h"
 #include "stack.h"
@@ -161,7 +162,7 @@ void novoJogo(VALOR peca, ESTADO *e, char modo) {
     e->mostravalidos = 0;
     e->historico = NULL;
     addHistorico(e);
-    mostrarJogo(e);
+    //mostrarJogo(e);
 }
 
 //TODO Função desnecessária ou codigo desnec.
@@ -179,11 +180,11 @@ void novoJogoB(ESTADO *e) {
 //TODO Invocação de posValidas provoca MemoryLeak
 
 void testeBots(ESTADO *e) {
-    for(int k = 0; k < 5; k++) {
+    for(int k = 0; k < 1; k++) {
         float inven = 0.0;
         int vitF = 0, vitD = 0, emp = 0;
         for (int i = 0; i < 200; i++) {
-            novoJogo(VALOR_X,e,'1');
+            novoJogo(VALOR_O,e,'1');
             while (ganhou(e) == -1) {
                 LPos lx =posValidas(e, VALOR_X);
                 LPos lo = posValidas(e ,VALOR_O);
@@ -352,7 +353,7 @@ int calculaVencedor(ESTADO *e) {
 
 
 void botFacil (ESTADO *e){
-    if (ganhou(e) == -1) {
+    //if (ganhou(e) == -1) {
 
 
 
@@ -366,11 +367,12 @@ void botFacil (ESTADO *e){
     e->grelha[pos.ln][pos.cl] = e->peca;
     executaMudanca(e,pos);
     proxTurno(e);
-    mostrarJogo(e);
-
+    //mostrarJogo(e);
+    /*
     } else {
         processFim(e);
     }
+     */
 }
 
 void botMedio (ESTADO *e) {
@@ -383,7 +385,7 @@ void botMedio (ESTADO *e) {
         j=0;
     }
     smpESTADO f2 = {0};
-    f2 = minmax2(s,1,-65,65,1,e->peca,1);
+    f2 = minmax3(s,5,-100,100,1,e->peca,1);
     pos = f2.posInit;
     resetValidos(e);
     e->grelha[pos.ln][pos.cl] = e->peca;
@@ -402,13 +404,13 @@ void botDificil (ESTADO *e) {
         j=0;
     }
     smpESTADO f2 = {0};
-    f2 = minmax2(s,5,-65,65,1,e->peca,1);
+    f2 = minmax2(s,5,-INFINITY,INFINITY,1,e->peca,1);
     pos = f2.posInit;
     resetValidos(e);
     e->grelha[pos.ln][pos.cl] = e->peca;
     executaMudanca(e,pos);
     proxTurno(e);
-    mostrarJogo(e);
+    //mostrarJogo(e);
 }
 
 

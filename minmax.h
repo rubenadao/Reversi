@@ -14,13 +14,19 @@ typedef struct posAvaliada{
 } POS_AVAL;
 */
 
-smpESTADO minmax2(smpESTADO est, int depth, int alpha, int beta, int maximizante, VALOR pecaMax, int init);
+smpESTADO minmax2(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init);
+smpESTADO minmax3(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init);
 int ganhouS(smpESTADO * e);
 int calculaVencedorS(smpESTADO *e);
+float aval_paridade(smpESTADO *e,VALOR pecaMax);
+float aval_mobilidade(smpESTADO *e,VALOR pecaMax);
+float aval_cantos(smpESTADO *e,VALOR pecaMax);
+int cantosPecaS(smpESTADO *e, VALOR p);
+
 int minmax(smpESTADO *est, int depth, int alpha, int beta, int maximizante, VALOR pecaMax);
-int avaliaEst(smpESTADO * e, VALOR pecaMax);
-int min(int x, int y);
-int max(int x, int y);
+float avaliaEst(smpESTADO * e, VALOR pecaMax);
+float min(float x, float y);
+float max(float x, float y);
 LPos posValidasS(smpESTADO * e, VALOR peca);
 int pontuacaoS (smpESTADO *e,VALOR p);
 void executaMudancaS(smpESTADO * e, POSICAO a);

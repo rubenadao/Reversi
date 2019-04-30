@@ -5,6 +5,7 @@
 #include "estado.h"
 #include "validos.h"
 #include "linkedLists.h"
+#include "game.h"
 #include <stdlib.h>
 
 // exemplo de uma função para imprimir o estado (Tabuleiro)
@@ -194,7 +195,7 @@ void posParaGrelha(POSICAO *a) {
     a->cl--;
     a->ln--;
 }
-
+/*
 void executaMudanca(ESTADO * e, POSICAO a){
     //posParaGrelha(&a);
     int i,j;
@@ -222,6 +223,32 @@ void auxMudanca(ESTADO * e, int ln, int cl , POSICAO vetor, POSICAO final) {
             e->grelha[initln][initcl] = e->peca;
             initln+=vetor.ln;
             initcl+=vetor.cl;
+        }
+    }
+}
+*/
+void executaMudanca (ESTADO * e, POSICAO a) {
+    POSICAO direcoes[8];
+    initDirecoes(direcoes);
+    for(int k = 0; k < 8; k++) {
+
+        int ln = a.ln + (direcoes[k].ln), cl = a.cl + (direcoes[k].cl);
+        while (ln > -1 && ln < 8 && cl > -1 && cl < 8 && e->grelha[ln][cl] == (pecaOposta(e->peca))) {
+            ln += direcoes[k].ln;
+            cl += direcoes[k].cl;
+        }
+        //primeira condição é redundante
+        if (ln != -1 && ln != 8 && cl != -1 && cl != 8 &&
+            !(ln == a.ln + (direcoes[k].ln) && cl == a.cl + (direcoes[k].cl))) {
+            if (e->grelha[ln][cl] == e->peca) {
+                ln = a.ln + (direcoes[k].ln); cl = a.cl + (direcoes[k].cl);
+                while (ln > -1 && ln < 8 && cl > -1 && cl < 8 && e->grelha[ln][cl] == (pecaOposta(e->peca))) {
+                    e->grelha[ln][cl] = e->peca;
+                    ln += direcoes[k].ln;
+                    cl += direcoes[k].cl;
+                }
+
+            }
         }
     }
 }
