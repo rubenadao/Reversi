@@ -94,10 +94,10 @@ void interpretador(char * comando, ESTADO *e) {
             } else printf("Nao tem nenhum jogo iniciado!\n\n");
             break;
         case 'U':
-            if (e->iniciado) {
+            if (isIniciado(e)){
                 e->historico=popS(e->historico,e);
                 if (e->iniciado) mostrarJogo(e);
-            } else printf("Nao tem nenhum jogo iniciado!\n\n");
+            }
             break;
         case 'A':
             //TODO caso n seja nem x nem ou nivel que n existe
@@ -130,8 +130,14 @@ void interpretador(char * comando, ESTADO *e) {
         case 'T':
             testeBots(e);
             break;
-        case 'R':
+        case '1':
             botFacil(e);
+            break;
+        case '2':
+            botMedio(e);
+            break;
+        case '3':
+            botDificil(e);
             break;
         case '?':
             printf("N  Para novo jogo em que o primeiro a jogar é o jogador com peça.\n");
@@ -152,6 +158,13 @@ void interpretador(char * comando, ESTADO *e) {
             //TODO
             printf("Comando Invalido!\n");
     }
+}
+
+int isIniciado(ESTADO *e){
+    if (e->iniciado) {
+        return 1;
+    } else printf("Nao tem nenhum jogo iniciado!\n\n");
+    return 0;
 }
 
 void novoJogo(VALOR peca, ESTADO *e, char modo) {
@@ -180,10 +193,11 @@ void novoJogoB(ESTADO *e) {
 //TODO Invocação de posValidas provoca MemoryLeak
 
 void testeBots(ESTADO *e) {
+    int times = 200;
     for(int k = 0; k < 1; k++) {
         float inven = 0.0;
         int vitF = 0, vitD = 0, emp = 0;
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < times; i++) {
             novoJogo(VALOR_O,e,'1');
             while (ganhou(e) == -1) {
                 LPos lx =posValidas(e, VALOR_X);
@@ -213,33 +227,11 @@ void testeBots(ESTADO *e) {
         }
         printf("Vitorias de Dificil:%d\n",vitD);
         printf("Empates:%d\n",emp);
-        inven = ((vitD+emp)/200.0) *100;
+        inven = ((vitD+emp)/(times + 0.0)) *100;
         printf("Invencibilidade:%f\n",inven);
     }
 
 }
-
-/*
-void testeBots(ESTADO *e) {
-    novoJogo(VALOR_X,e,'1');
-    while (ganhou(e) == -1) {
-        if (e->peca == VALOR_X && posValidas(e,VALOR_X) != NULL) botFacil(e);
-        else if (e->peca == VALOR_X) {
-            e->peca = VALOR_O;
-            botDificil(e);
-        }
-        else if (e->peca == VALOR_O && posValidas(e,VALOR_O) != NULL) botDificil(e);
-        else if (e->peca == VALOR_O) {
-            e->peca = VALOR_X;
-            botFacil(e);
-        }
-    }
-    int vitoria = ganhou(e);
-    if (vitoria == 0) printf("BOT FACIL GANHOU\n");
-    else if (vitoria == 1) printf("BOT DIFICIL GANHOU\n");
-    else printf("EMPATE\n");
-}
-*/
 
 void novaJogada(POSICAO p, ESTADO *e) {
     if (ganhou(e) == -1) {
@@ -385,7 +377,7 @@ void botMedio (ESTADO *e) {
         j=0;
     }
     smpESTADO f2 = {0};
-    f2 = minmax3(s,5,-100,100,1,e->peca,1);
+    f2 = minmax2(s,5,-INFINITY,INFINITY,1,e->peca,1);
     pos = f2.posInit;
     resetValidos(e);
     e->grelha[pos.ln][pos.cl] = e->peca;

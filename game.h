@@ -7,6 +7,7 @@
 #define REVERSI_GAME_H
 
 void interpretador(char * comando, ESTADO *e);
+int isIniciado(ESTADO *e);
 void novoJogo(VALOR peca, ESTADO *e, char modo);
 void testeBots(ESTADO *e);
 void novoJogoB(ESTADO *e);
