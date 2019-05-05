@@ -50,6 +50,7 @@ void printa(ESTADO e)
 
 }
 
+//Função meio desnecessária
 void printWithH(ESTADO e, POSICAO hint){
     char c = ' '; int ln, cl;
 
@@ -167,66 +168,6 @@ VALOR charParaPeca (char peca){
     else return VAZIA;
 }
 
-POSICAO subtraiVetorGrelha(POSICAO * a, int ln, int cl) {
-    POSICAO c;
-    c.ln = a->ln - ln;
-    c.cl = a->cl - cl;
-    return c;
-}
-
-void normalizaVetor(POSICAO * a){
-    if (a->ln != 0) {
-        if (a->ln > 0) a->ln = 1;
-        else a->ln = -1;
-    }
-    if (a->cl != 0) {
-        if (a->cl > 0) a->cl = 1;
-        else a->cl = -1;
-    }
-}
-
-int isPotencial(POSICAO a) {
-    if ( (a.ln == 0 && a.cl != 0) || (a.ln != 0 && a.cl == 0) ) return 1;
-    else if (a.ln != 0 && abs(a.ln) == abs(a.cl)) return 1;
-    else return 0;
-}
-
-void posParaGrelha(POSICAO *a) {
-    a->cl--;
-    a->ln--;
-}
-/*
-void executaMudanca(ESTADO * e, POSICAO a){
-    //posParaGrelha(&a);
-    int i,j;
-    for(i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
-            if (e->grelha[i][j] == e->peca) {
-                POSICAO vetor = subtraiVetorGrelha(&a,i,j);
-                if (isPotencial(vetor)) {
-                    normalizaVetor(&vetor);
-                    auxMudanca(e,i,j,vetor,a);
-                }
-            }
-        }
-    }
-}
-
-void auxMudanca(ESTADO * e, int ln, int cl , POSICAO vetor, POSICAO final) {
-    int i = 0; int initln = ln; int initcl = cl;
-    for (;ln < 8 && cl < 8 && ln >= 0 && cl >= 0 && e->grelha[ln][cl] != VAZIA && (final.ln != ln || final.cl != cl);i++) {
-        ln += vetor.ln;
-        cl += vetor.cl;
-    }
-    if (final.ln == ln && final.cl == cl) {
-        while (initln != final.ln || initcl != final.cl) {
-            e->grelha[initln][initcl] = e->peca;
-            initln+=vetor.ln;
-            initcl+=vetor.cl;
-        }
-    }
-}
-*/
 void executaMudanca (ESTADO * e, POSICAO a) {
     POSICAO direcoes[8];
     initDirecoes(direcoes);

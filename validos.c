@@ -63,14 +63,13 @@ LPos posValidas(ESTADO * e, VALOR peca) {
             }
         }
     }
-    //printf("Validos: %d",lposLength(l));
     return l;
 }
 
 int posExiste(LPos l, int ln, int cl){
     int r = 0;
     while(l != NULL && r == 0) {
-        if (l->pos.ln == ln && l->pos.cl) r =1;
+        if (l->pos.ln == ln && l->pos.cl == cl) r =1;
         l = l->prox;
     }
     return r;
