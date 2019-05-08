@@ -231,6 +231,7 @@ void testeBots(ESTADO *e) {
     else if (vitoria == 1) printf("BOT DIFICIL GANHOU\n");
     else printf("EMPATE\n");
 }
+
 */
 
 void novaJogada(POSICAO p, ESTADO *e) {
@@ -290,6 +291,12 @@ void startEngine() {
     }
 }
 
+
+/**
+ * Recebe uma peça e devolve a peça oposta
+ * @param p - uma peça
+ * @return - peça oposta
+ */
 VALOR pecaOposta(VALOR p) {
     if (p==VALOR_X) return VALOR_O;
     else return VALOR_X;
@@ -319,13 +326,22 @@ int ganhou(ESTADO * e) {
     return -1;
 }
 
+
+/**
+ * Calcula o vencedor do jogo
+ * @param e - estado anterior
+ * @return - vencedor do jogo
+ */
 int calculaVencedor(ESTADO *e) {
         if (pontuacao(e,VALOR_X) > pontuacao(e,VALOR_O)) return 0;
         else if (pontuacao(e,VALOR_X) < pontuacao(e,VALOR_O)) return 1;
         else return 2;
 }
 
-
+/**
+ * Executa a jogada do bot facil
+ * @param e - estado anterior
+ */
 void botFacil (ESTADO *e){
     LPos l; int i; int x; POSICAO pos;
     l= posValidas(e, e->peca);
@@ -340,6 +356,10 @@ void botFacil (ESTADO *e){
     mostrarJogo(e);
 }
 
+/**
+ * Executa a jogada do bot medio
+ * @param e - estado anterior
+ */
 void botMedio (ESTADO *e) {
     smpESTADO s; POSICAO pos;
     s.peca = e->peca;
@@ -359,6 +379,10 @@ void botMedio (ESTADO *e) {
     mostrarJogo(e);
 }
 
+/**
+ * Executa a jogada do bot dificil
+ * @param e - estado anterior
+ */
 void botDificil (ESTADO *e) {
     smpESTADO s; POSICAO pos;
     s.peca = e->peca;
