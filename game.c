@@ -274,6 +274,11 @@ void startEngine() {
     }
 }
 
+/**
+ * Retorna peça oposta da recebida
+ * @param p - peça
+ * @return - peça oposta
+ */
 VALOR pecaOposta(VALOR p) {
     if (p==VALOR_X) return VALOR_O;
     else return VALOR_X;
@@ -332,13 +337,22 @@ int ganhou(ESTADO * e) {
     return -1;
 }
 
+/**
+ * calcula o vencedor do jogo
+ * @param e - estado anterior
+ * @return - vencedor
+ */
+
 int calculaVencedor(ESTADO *e) {
         if (pontuacao(e,VALOR_X) > pontuacao(e,VALOR_O)) return 0;
         else if (pontuacao(e,VALOR_X) < pontuacao(e,VALOR_O)) return 1;
         else return 2;
 }
 
-
+/**
+ * Executa a jogada do bot facil
+ * @param e - estado anterior
+ */
 void botFacil (ESTADO *e){
     LPos l; int i; int x; POSICAO pos;
     l= posValidas(e, e->peca);
@@ -350,6 +364,10 @@ void botFacil (ESTADO *e){
     mostrarJogo(e);
 }
 
+/**
+ * Executa a jogada do bot medio
+ * @param e - estado anterior
+ */
 void botMedio (ESTADO *e) {
     smpESTADO s; POSICAO pos;
     criaSMPEstado(e,&s);
@@ -359,7 +377,10 @@ void botMedio (ESTADO *e) {
     executaJogada(e,pos);
     mostrarJogo(e);
 }
-
+/**
+ * Executa a jogada do bot dificil
+ * @param e - estado anterior
+ */
 void botDificil (ESTADO *e) {
     smpESTADO s; POSICAO pos;
     criaSMPEstado(e,&s);
