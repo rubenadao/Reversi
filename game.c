@@ -17,7 +17,11 @@
 
 #define MAX_BUFFER 100
 
-
+/**
+ * Executa o comando escolhido pelo utilizador
+ * @param comando - comando
+ * @param e - estado
+ */
 void interpretador(char * comando, ESTADO *e) {
     char opcode[MAX_BUFFER];
     char fstArg[MAX_BUFFER];
@@ -119,6 +123,10 @@ void interpretador(char * comando, ESTADO *e) {
     }
 }
 
+/**
+ * Faz print da instrução
+ * @param e - estado
+ */
 void printInstruc(ESTADO *e){
     printf("N  Para novo jogo em que o primeiro a jogar e o jogador com peça.\n");
     printf("L  Para ler um jogo de ficheiro. Em modo automático (A), apos leitura do ficheiro, o proximo jogador a jogar e sempre o humano!\n");
@@ -133,12 +141,22 @@ void printInstruc(ESTADO *e){
     if (e->iniciado) mostrarJogo(e);
 }
 
+/**
+ * Verifica se o jogo está iniciado
+ * @param e - estado
+ * @return - 1 ou 0, dependendo da veracidade da afirmação (se está iniciado ou não)
+ */
 int isIniciado(ESTADO *e){
     if (e->iniciado) {
         return 1;
     } else printf("Nao tem nenhum jogo iniciado!\n\n");
     return 0;
 }
+
+/**
+ * Inicializa um jogo
+ * @param e - estado
+ */
 
 void novoJogo(VALOR peca, ESTADO *e, char modo) {
     cleanEstado(e);
@@ -152,6 +170,8 @@ void novoJogo(VALOR peca, ESTADO *e, char modo) {
 }
 
 //TODO Função desnecessária ou codigo desnec.
+
+
 void novoJogoB(ESTADO *e) {
     cleanEstado(e);
     initEstado(e);
@@ -164,6 +184,8 @@ void novoJogoB(ESTADO *e) {
 }
 
 //TODO Invocação de posValidas provoca MemoryLeak
+
+
 
 void testeBots(ESTADO *e) {
     int times = 200;
@@ -205,6 +227,11 @@ void testeBots(ESTADO *e) {
     }
 }
 
+/**
+ * Nova jogada
+ * @param p - posiçao
+ * @param e - estado
+ */
 void novaJogada(POSICAO p, ESTADO *e) {
     VALOR pecaAtual = e->peca;
     resetValidos(e);
@@ -226,7 +253,11 @@ void novaJogadaAl(ESTADO *e) {
     else if (e->iniciado == 1 && e->modo == '1' && e->peca != pecaAtual) jogadaBot(e,e->nivelBot);
 }
 
-
+/**
+ * Aplica a jogada do bot dependendo do nivel
+ * @param e - estado anterior
+ * @param n - nível
+ */
 void jogadaBot(ESTADO *e, int n){
     //TODO Pode ser não especifico
     VALOR pecaAtual = e->peca;
@@ -236,6 +267,11 @@ void jogadaBot(ESTADO *e, int n){
     processEndSwitch(e);
     if (e->iniciado == 1 && e->modo == '1' && e->peca == pecaAtual) jogadaBot(e,n);
 }
+
+/**
+ * Adiciona o estado ao histórico do jogo
+ * @param e - estado
+ */
 
 void addHistorico(ESTADO *e) {
     smpESTADO s;
@@ -249,6 +285,10 @@ void addHistorico(ESTADO *e) {
     e->historico = pushS(e->historico,s);
 }
 
+/**
+ * Imprime/print o estado do jogo
+ * @param e - estado
+ */
 void mostrarJogo(ESTADO * e){
     //TODO se usar esta linha eliminar as "\n\n" das outras
     printf("\n");
@@ -284,6 +324,11 @@ VALOR pecaOposta(VALOR p) {
     else return VALOR_X;
 }
 
+
+/**
+ * Imprime no ecrã o vencedor do jogo
+ * @param e -estado
+ */
 void processFim(ESTADO *e){
     int venc = calculaVencedor(e);
     if (venc == 0) {
@@ -314,6 +359,8 @@ void processEndSwitch(ESTADO *e){
 
 
 //TODO Invocação de posValidas provoca MemoryLeak
+
+
 int ganhou(ESTADO * e) {
     int i = 0, j = 0;
     LPos lx = posValidas(e, VALOR_X);
@@ -391,6 +438,11 @@ void botDificil (ESTADO *e) {
     mostrarJogo(e);
 }
 
+/**
+ * Simplifica a versão do estado
+ * @param e - estado anterior
+ * @param s - estado na versão simplificada
+ */
 void criaSMPEstado(ESTADO *e, smpESTADO *s) {
     s->peca = e->peca;
     int i=0,j=0;
@@ -402,6 +454,12 @@ void criaSMPEstado(ESTADO *e, smpESTADO *s) {
 }
 
 //TODO por estado sempre em primeiro ou segundo nas funções
+
+/**
+ * Executa uma jogada
+ * @param e - estado anterior
+ * @param p - posição
+ */
 
 void executaJogada(ESTADO *e, POSICAO p) {
     e->grelha[p.ln][p.cl] = e->peca;
