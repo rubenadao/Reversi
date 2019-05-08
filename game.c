@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include <math.h>
 #include "game.h"
 #include "estado.h"
 #include "stack.h"
@@ -32,20 +33,14 @@ void interpretador(char * comando, ESTADO *e) {
         case 'L':
             sscanf(comando,"%s %s",opcode,fstArg);
             lerFicheiro(fstArg,e);
-            //TODO este if??
-            if (e->iniciado) {
-                mostrarJogo(e);
-                e->mostravalidos = 0;
-            }
             break;
         case 'E':
             sscanf(comando,"%s %s",opcode,fstArg);
-            colocaValidos(e);
             escreverFicheiro(fstArg,e);
-            if (e->iniciado) mostrarJogo(e);
+            //if (e->iniciado) mostrarJogo(e);
             break;
         case 'J':
-            if (e->iniciado) {
+            if (isIniciado(e)) {
                 sscanf(comando,"%s %s %s",opcode,fstArg,sndArg);
                 if (isdigit(fstArg[0]) && isdigit(sndArg[0])) {
                     POSICAO p;
@@ -61,42 +56,35 @@ void interpretador(char * comando, ESTADO *e) {
                         printf("Escolha uma jogada valida!\n\n");
                         mostrarJogo(e);
                     }
-                }
-                else {
+                } else {
                     printf("Posicao Invalida!\n\n");
                     mostrarJogo(e);
                 }
-            } else printf("Nao tem nenhum jogo iniciado!\n\n");
+            }
             break;
         case 'S':
-            if (e->iniciado) {
+            if (isIniciado(e)) {
                 e->mostravalidos = 1;
                 colocaValidos(e);
                 mostrarJogo(e);
-            } else printf("Nao tem nenhum jogo iniciado!\n\n");
+            }
             break;
         case 'H':
             //TODO Melhorar isto
-            if (e->iniciado) {
+            if (isIniciado(e)) {
                 //TODO POR ISTO NUMA FUNÇÃO E USAR TBM NO 'A'
                 smpESTADO s;
-                s.peca = e->peca;
-                int i=0,j=0;
-                for(;i<8;i++) {
-                    for(;j<8;j++)
-                        s.grelha[i][j]=e->grelha[i][j];
-                    j=0;
-                }
+                criaSMPEstado(e,&s);
                 POSICAO p;
-                p = minmax2(s,5,-65,65,1,e->peca,1).posInit;
+                p = minmax2(s,5,-INFINITY,INFINITY,1,e->peca,1).posInit;
                 printWithH(*e,p);
-            } else printf("Nao tem nenhum jogo iniciado!\n\n");
+            }
             break;
         case 'U':
-            if (e->iniciado) {
+            if (isIniciado(e)){
                 e->historico=popS(e->historico,e);
-                mostrarJogo(e);
-            } else printf("Nao tem nenhum jogo iniciado!\n\n");
+                if (e->iniciado) mostrarJogo(e);
+            }
             break;
         case 'A':
             //TODO caso n seja nem x nem ou nivel que n existe
@@ -106,44 +94,50 @@ void interpretador(char * comando, ESTADO *e) {
                 novoJogoB(e);
             } else novoJogo(VALOR_X,e,'1');
             break;
-        case 'M':
-            if (1){
-                smpESTADO s;
-                s.peca = e->peca;
-                int i=0,j=0;
-                for(;i<8;i++) {
-                    for(;j<8;j++)
-                        s.grelha[i][j]=e->grelha[i][j];
-                    j=0;
-                }
-                int f;
-                smpESTADO f2 = {0};
-                f = minmax(&s,5,-65,65,1,e->peca);
-                printf("f:%d\n",f);
-                printf("---------------------\n");
-                f2 = minmax2(s,5,-65,65,1,e->peca,1);
-                printf("f2:%d\n",f2.eval);
-                printf("jogada:(%d,%d)\n",f2.posInit.ln,f2.posInit.cl);
-            }
+        case 'R':
+            novaJogadaAl(e);
             break;
         case 'T':
             testeBots(e);
             break;
-        case 'R':
-            if (ganhou(e) != -1) {
-                printf("Acabou\n");
-            }
-            else printf("Nao Acabou\n");
-            //if (posValidas(e,e->peca) == NULL) printf("E NULL\n");
-            //printList(posValidas(e,e->peca));
-            //printf("\n Validas\n");
+        case '1':
+            jogadaBot(e,1);
             break;
+        case '2':
+            jogadaBot(e,2);
+            break;
+        case '3':
+            jogadaBot(e,3);
+            break;
+        case '?':
+            printInstruc(e);
         case 'Q':
             exit(0);
         default:
             //TODO
             printf("Comando Invalido!\n");
     }
+}
+
+void printInstruc(ESTADO *e){
+    printf("N  Para novo jogo em que o primeiro a jogar e o jogador com peça.\n");
+    printf("L  Para ler um jogo de ficheiro. Em modo automático (A), apos leitura do ficheiro, o proximo jogador a jogar e sempre o humano!\n");
+    printf("E  Escrever em ficheiro estado do jogo.\n");
+    printf("J <L> <C>  Jogar peça atual na posiçao (L,C). O comando J 1 1 pede para colocar a peça atual no canto superior esquerdo!\n");
+    printf("S  Para imprimir um ponto ‘.’ nas posições com jogada válida.\n");
+    printf("H  Para sugestão de jogada. Deve ser colocado um ‘?’ no sitio sugerido.\n");
+    printf("U  Para desfazer a última jogada (Undo). Isto tem de permitir desfazer até ao estado inicial do jogo!\n");
+    printf("A <peça> <nível>  Novo jogo contra ‘bot’ (computador) em que o ‘bot’ joga com a peça <peça> num nível de dificuldade <nível> (3 níveis possíveis).");
+    printf("Neste modo quem joga primeiro é sempre o jogador com a peça preta ‘X’.\n");
+    printf("Q  Para Sair!\n");
+    if (e->iniciado) mostrarJogo(e);
+}
+
+int isIniciado(ESTADO *e){
+    if (e->iniciado) {
+        return 1;
+    } else printf("Nao tem nenhum jogo iniciado!\n\n");
+    return 0;
 }
 
 void novoJogo(VALOR peca, ESTADO *e, char modo) {
@@ -166,17 +160,18 @@ void novoJogoB(ESTADO *e) {
     e->mostravalidos = 0;
     e->historico = NULL;
     mostrarJogo(e);
-    jogadaBot(e);
+    jogadaBot(e,e->nivelBot);
 }
 
 //TODO Invocação de posValidas provoca MemoryLeak
 
 void testeBots(ESTADO *e) {
-    for(int k = 0; k < 5; k++) {
+    int times = 200;
+    for(int k = 0; k < 1; k++) {
         float inven = 0.0;
         int vitF = 0, vitD = 0, emp = 0;
-        for (int i = 0; i < 200; i++) {
-            novoJogo(VALOR_X,e,'1');
+        for (int i = 0; i < times; i++) {
+            novoJogo(VALOR_O,e,'1');
             while (ganhou(e) == -1) {
                 LPos lx =posValidas(e, VALOR_X);
                 LPos lo = posValidas(e ,VALOR_O);
@@ -205,53 +200,41 @@ void testeBots(ESTADO *e) {
         }
         printf("Vitorias de Dificil:%d\n",vitD);
         printf("Empates:%d\n",emp);
-        inven = ((vitD+emp)/200.0) *100;
+        inven = ((vitD+emp)/(times + 0.0)) *100;
         printf("Invencibilidade:%f\n",inven);
     }
-
 }
-
-/*
-void testeBots(ESTADO *e) {
-    novoJogo(VALOR_X,e,'1');
-    while (ganhou(e) == -1) {
-        if (e->peca == VALOR_X && posValidas(e,VALOR_X) != NULL) botFacil(e);
-        else if (e->peca == VALOR_X) {
-            e->peca = VALOR_O;
-            botDificil(e);
-        }
-        else if (e->peca == VALOR_O && posValidas(e,VALOR_O) != NULL) botDificil(e);
-        else if (e->peca == VALOR_O) {
-            e->peca = VALOR_X;
-            botFacil(e);
-        }
-    }
-    int vitoria = ganhou(e);
-    if (vitoria == 0) printf("BOT FACIL GANHOU\n");
-    else if (vitoria == 1) printf("BOT DIFICIL GANHOU\n");
-    else printf("EMPATE\n");
-}
-
-*/
 
 void novaJogada(POSICAO p, ESTADO *e) {
+    VALOR pecaAtual = e->peca;
     resetValidos(e);
-    e->grelha[p.ln][p.cl] = e->peca;
-    executaMudanca(e,p);
-    proxTurno(e);
+    executaJogada(e,p);
     addHistorico(e);
     mostrarJogo(e);
-    if (e->modo == '1') jogadaBot(e);
+    processEndSwitch(e);
+    if (e->iniciado == 1 && e->modo == '1' && e->peca != pecaAtual) jogadaBot(e,e->nivelBot);;
 }
 
-void jogadaBot(ESTADO *e){
+
+void novaJogadaAl(ESTADO *e) {
+    VALOR pecaAtual = e->peca;
+    resetValidos(e);
+    addHistorico(e);
+    botFacil(e);
+    processEndSwitch(e);
+    if (e->iniciado == 1 && e->modo == '1' && e->peca == pecaAtual) novaJogadaAl(e);
+    else if (e->iniciado == 1 && e->modo == '1' && e->peca != pecaAtual) jogadaBot(e,e->nivelBot);
+}
+
+
+void jogadaBot(ESTADO *e, int n){
     //TODO Pode ser não especifico
-    if (e->nivelBot == 1) botFacil(e);
-    else if (e->nivelBot == 2) botMedio(e);
-    else if (e->nivelBot == 3) botDificil(e);
-    /*
-     * else
-     */
+    VALOR pecaAtual = e->peca;
+    if (n == 1) botFacil(e);
+    else if (n == 2) botMedio(e);
+    else if (n == 3) botDificil(e);
+    processEndSwitch(e);
+    if (e->iniciado == 1 && e->modo == '1' && e->peca == pecaAtual) jogadaBot(e,n);
 }
 
 void addHistorico(ESTADO *e) {
@@ -291,21 +274,44 @@ void startEngine() {
     }
 }
 
-
-/**
- * Recebe uma peça e devolve a peça oposta
- * @param p - uma peça
- * @return - peça oposta
- */
 VALOR pecaOposta(VALOR p) {
     if (p==VALOR_X) return VALOR_O;
     else return VALOR_X;
 }
 
+void processFim(ESTADO *e){
+    int venc = calculaVencedor(e);
+    if (venc == 0) {
+        printf("VENCEDOR: X\n\n");
+    } else if (venc == 1) {
+        printf("VENCEDOR: O\n\n");
+    } else printf("EMPATE\n\n");
+    e->iniciado = 0;
+}
+
+//TODO Se já estiver cheio escuso de perder tempo com o jogadasValidas
+
+void processEndSwitch(ESTADO *e){
+    LPos lx = posValidas(e, VALOR_X);
+    LPos lo = posValidas(e ,VALOR_O);
+    int jogs_X = lengthList(lx);
+    int jogs_O = lengthList(lo);
+    //acho que é redundante ver se está cheio.
+    if (jogs_O + jogs_X > 0) {
+        if (e->peca == VALOR_O && jogs_O == 0) e->peca = VALOR_X;
+        else if (e->peca == VALOR_X && jogs_X == 0) e->peca = VALOR_O;
+    } else {
+        processFim(e);
+    }
+    freeList(lx);
+    freeList(lo);
+}
+
+
 //TODO Invocação de posValidas provoca MemoryLeak
 int ganhou(ESTADO * e) {
     int i = 0, j = 0;
-    LPos lx =posValidas(e, VALOR_X);
+    LPos lx = posValidas(e, VALOR_X);
     LPos lo = posValidas(e ,VALOR_O);
     for (; i<8 && e->grelha [i][j] != VAZIA ; i++) {
         for (; j<8 && e->grelha [i][j] != VAZIA ; j++);
@@ -326,80 +332,58 @@ int ganhou(ESTADO * e) {
     return -1;
 }
 
-
-/**
- * Calcula o vencedor do jogo
- * @param e - estado anterior
- * @return - vencedor do jogo
- */
 int calculaVencedor(ESTADO *e) {
         if (pontuacao(e,VALOR_X) > pontuacao(e,VALOR_O)) return 0;
         else if (pontuacao(e,VALOR_X) < pontuacao(e,VALOR_O)) return 1;
         else return 2;
 }
 
-/**
- * Executa a jogada do bot facil
- * @param e - estado anterior
- */
+
 void botFacil (ESTADO *e){
     LPos l; int i; int x; POSICAO pos;
     l= posValidas(e, e->peca);
     i = lengthList(l);
-    //TODO é preciso usar seed?
     x = (rand() % i);
     pos = getPosIndex(l , x);
     resetValidos(e);
-    e->grelha[pos.ln][pos.cl] = e->peca;
-    executaMudanca(e,pos);
-    proxTurno(e);
+    executaJogada(e,pos);
     mostrarJogo(e);
 }
 
-/**
- * Executa a jogada do bot medio
- * @param e - estado anterior
- */
 void botMedio (ESTADO *e) {
     smpESTADO s; POSICAO pos;
-    s.peca = e->peca;
-    int i=0,j=0;
-    for(;i<8;i++) {
-        for(;j<8;j++)
-            s.grelha[i][j]=e->grelha[i][j];
-        j=0;
-    }
-    smpESTADO f2 = {0};
-    f2 = minmax2(s,1,-65,65,1,e->peca,1);
-    pos = f2.posInit;
+    criaSMPEstado(e,&s);
+    s = minmax2(s,1,-INFINITY,INFINITY,1,e->peca,1);
+    pos = s.posInit;
     resetValidos(e);
-    e->grelha[pos.ln][pos.cl] = e->peca;
-    executaMudanca(e,pos);
-    proxTurno(e);
+    executaJogada(e,pos);
     mostrarJogo(e);
 }
 
-/**
- * Executa a jogada do bot dificil
- * @param e - estado anterior
- */
 void botDificil (ESTADO *e) {
     smpESTADO s; POSICAO pos;
-    s.peca = e->peca;
-    int i=0,j=0;
-    for(;i<8;i++) {
-        for(;j<8;j++)
-            s.grelha[i][j]=e->grelha[i][j];
-        j=0;
-    }
-    smpESTADO f2 = {0};
-    f2 = minmax2(s,5,-65,65,1,e->peca,1);
-    pos = f2.posInit;
+    criaSMPEstado(e,&s);
+    s = minmax2(s,7,-INFINITY,INFINITY,1,e->peca,1);
+    pos = s.posInit;
     resetValidos(e);
-    e->grelha[pos.ln][pos.cl] = e->peca;
-    executaMudanca(e,pos);
-    proxTurno(e);
+    executaJogada(e,pos);
     mostrarJogo(e);
 }
 
+void criaSMPEstado(ESTADO *e, smpESTADO *s) {
+    s->peca = e->peca;
+    int i=0,j=0;
+    for(;i<8;i++) {
+        for(;j<8;j++)
+            s->grelha[i][j]=e->grelha[i][j];
+        j=0;
+    }
+}
 
+//TODO por estado sempre em primeiro ou segundo nas funções
+
+void executaJogada(ESTADO *e, POSICAO p) {
+    e->grelha[p.ln][p.cl] = e->peca;
+    executaMudanca(e,p);
+    proxTurno(e);
+}

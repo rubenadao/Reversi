@@ -24,7 +24,7 @@ typedef struct simple_estado {
     VALOR peca; // peça do jogador que vai jogar!
     VALOR grelha[8][8];
     POSICAO posInit;
-    int eval;
+    float eval;
 } smpESTADO;
 
 typedef struct stack *STACK;
@@ -66,6 +66,6 @@ void normalizaVetor(POSICAO * a);
 int isPotencial(POSICAO a);
 void posParaGrelha(POSICAO *a);
 void executaMudanca(ESTADO * e, POSICAO a);
-void auxMudanca(ESTADO * e, int ln, int cl , POSICAO vetor, POSICAO final);
+//void auxMudanca(ESTADO * e, int ln, int cl , POSICAO vetor, POSICAO final);
 
 #endif //PROJ_ESTADO_H

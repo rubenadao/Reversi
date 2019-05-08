@@ -5,6 +5,7 @@
 #include "estado.h"
 #include "validos.h"
 #include "linkedLists.h"
+#include "game.h"
 #include <stdlib.h>
 
 // exemplo de uma função para imprimir o estado (Tabuleiro)
@@ -49,6 +50,7 @@ void printa(ESTADO e)
 
 }
 
+//Função meio desnecessária
 void printWithH(ESTADO e, POSICAO hint){
     char c = ' '; int ln, cl;
 
@@ -166,62 +168,28 @@ VALOR charParaPeca (char peca){
     else return VAZIA;
 }
 
-POSICAO subtraiVetorGrelha(POSICAO * a, int ln, int cl) {
-    POSICAO c;
-    c.ln = a->ln - ln;
-    c.cl = a->cl - cl;
-    return c;
-}
+void executaMudanca (ESTADO * e, POSICAO a) {
+    POSICAO direcoes[8];
+    initDirecoes(direcoes);
+    for(int k = 0; k < 8; k++) {
 
-void normalizaVetor(POSICAO * a){
-    if (a->ln != 0) {
-        if (a->ln > 0) a->ln = 1;
-        else a->ln = -1;
-    }
-    if (a->cl != 0) {
-        if (a->cl > 0) a->cl = 1;
-        else a->cl = -1;
-    }
-}
-
-int isPotencial(POSICAO a) {
-    if ( (a.ln == 0 && a.cl != 0) || (a.ln != 0 && a.cl == 0) ) return 1;
-    else if (a.ln != 0 && abs(a.ln) == abs(a.cl)) return 1;
-    else return 0;
-}
-
-void posParaGrelha(POSICAO *a) {
-    a->cl--;
-    a->ln--;
-}
-
-void executaMudanca(ESTADO * e, POSICAO a){
-    //posParaGrelha(&a);
-    int i,j;
-    for(i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
-            if (e->grelha[i][j] == e->peca) {
-                POSICAO vetor = subtraiVetorGrelha(&a,i,j);
-                if (isPotencial(vetor)) {
-                    normalizaVetor(&vetor);
-                    auxMudanca(e,i,j,vetor,a);
-                }
-            }
+        int ln = a.ln + (direcoes[k].ln), cl = a.cl + (direcoes[k].cl);
+        while (ln > -1 && ln < 8 && cl > -1 && cl < 8 && e->grelha[ln][cl] == (pecaOposta(e->peca))) {
+            ln += direcoes[k].ln;
+            cl += direcoes[k].cl;
         }
-    }
-}
+        //primeira condição é redundante
+        if (ln != -1 && ln != 8 && cl != -1 && cl != 8 &&
+            !(ln == a.ln + (direcoes[k].ln) && cl == a.cl + (direcoes[k].cl))) {
+            if (e->grelha[ln][cl] == e->peca) {
+                ln = a.ln + (direcoes[k].ln); cl = a.cl + (direcoes[k].cl);
+                while (ln > -1 && ln < 8 && cl > -1 && cl < 8 && e->grelha[ln][cl] == (pecaOposta(e->peca))) {
+                    e->grelha[ln][cl] = e->peca;
+                    ln += direcoes[k].ln;
+                    cl += direcoes[k].cl;
+                }
 
-void auxMudanca(ESTADO * e, int ln, int cl , POSICAO vetor, POSICAO final) {
-    int i = 0; int initln = ln; int initcl = cl;
-    for (;ln < 8 && cl < 8 && ln >= 0 && cl >= 0 && e->grelha[ln][cl] != VAZIA && (final.ln != ln || final.cl != cl);i++) {
-        ln += vetor.ln;
-        cl += vetor.cl;
-    }
-    if (final.ln == ln && final.cl == cl) {
-        while (initln != final.ln || initcl != final.cl) {
-            e->grelha[initln][initcl] = e->peca;
-            initln+=vetor.ln;
-            initcl+=vetor.cl;
+            }
         }
     }
 }

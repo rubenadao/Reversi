@@ -6,7 +6,7 @@
 #include "estado.h"
 #include <stdlib.h>
 
-
+//descnecessário dar a stack
 STACK pushS(STACK l, smpESTADO e) {
     STACK new;
     new = (STACK) malloc(sizeof(NodoS));
@@ -15,6 +15,7 @@ STACK pushS(STACK l, smpESTADO e) {
     return new;
 }
 
+//descnecessário dar a stack
 STACK popS(STACK l, ESTADO *e) {
     if (l != NULL && l->prox != NULL) {
         STACK head = l;
@@ -29,7 +30,8 @@ STACK popS(STACK l, ESTADO *e) {
         }
         printf("Jogada Desfeita!\n\n");
         return l;
-    } else printf("Nao existem jogadas anteriores!\n\n");
+    //} else printf("Nao existem jogadas anteriores!\n\n");
+    } else e->iniciado = 0;
 }
 
 void printStack(STACK s) {

@@ -46,13 +46,17 @@ LPos posValidas(ESTADO * e, VALOR peca) {
                         ln += direcoes[k].ln;
                         cl += direcoes[k].cl;
                     }
-
+                    //primeira condição é redundante
                     if (ln!=-1 && ln!=8 && cl!=-1 && cl!=8 && !(ln == i+(direcoes[k].ln) && cl == j+(direcoes[k].cl)) ){
                         if (e->grelha[ln][cl] == VAZIA || e->grelha[ln][cl] == VALIDO) {
+                            if (posExiste(l,ln,cl) == 0) {
+
                             POSICAO p;
                             p.ln = ln;
                             p.cl = cl;
+
                             l = addPos(l,p);
+                            }
                         }
                     }
                 }
@@ -60,4 +64,13 @@ LPos posValidas(ESTADO * e, VALOR peca) {
         }
     }
     return l;
+}
+
+int posExiste(LPos l, int ln, int cl){
+    int r = 0;
+    while(l != NULL && r == 0) {
+        if (l->pos.ln == ln && l->pos.cl == cl) r =1;
+        l = l->prox;
+    }
+    return r;
 }
