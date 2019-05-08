@@ -353,7 +353,7 @@ void botFacil (ESTADO *e){
 void botMedio (ESTADO *e) {
     smpESTADO s; POSICAO pos;
     criaSMPEstado(e,&s);
-    s = minmax2(s,5,-INFINITY,INFINITY,1,e->peca,1);
+    s = minmax2(s,1,-INFINITY,INFINITY,1,e->peca,1);
     pos = s.posInit;
     resetValidos(e);
     executaJogada(e,pos);
@@ -363,7 +363,7 @@ void botMedio (ESTADO *e) {
 void botDificil (ESTADO *e) {
     smpESTADO s; POSICAO pos;
     criaSMPEstado(e,&s);
-    s = minmax2(s,5,-INFINITY,INFINITY,1,e->peca,1);
+    s = minmax2(s,7,-INFINITY,INFINITY,1,e->peca,1);
     pos = s.posInit;
     resetValidos(e);
     executaJogada(e,pos);
