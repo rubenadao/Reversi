@@ -16,7 +16,6 @@ typedef struct slist {
     LPos prox;
 } Nodo;
 
-void printList(LPos l);
 LPos addPos (LPos l, POSICAO p);
 int lengthList(LPos l);
 POSICAO getPosIndex(LPos l, int i);

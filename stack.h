@@ -8,6 +8,5 @@
 
 STACK pushS(STACK l, smpESTADO e);
 STACK popS(STACK l, ESTADO *e);
-void printStack(STACK s);
 
 #endif //REVERSI_STACK_H

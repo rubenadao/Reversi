@@ -55,6 +55,11 @@ void printa(ESTADO e)
 }
 
 //TODO Eliminar
+/**
+ * Função printa, mas que coloca a sugestão no ecrã
+ * @param e - Estado Atual
+ * @param hint - Posição de sugestão
+ */
 //Função meio desnecessária
 void printWithH(ESTADO e, POSICAO hint){
     char c = ' '; int ln, cl;

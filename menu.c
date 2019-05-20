@@ -79,6 +79,14 @@ void cmdSugestao(ESTADO *e){
     }
 }
 
+void cmdUndo(ESTADO *e){
+    if (isIniciado(e)){
+        e->historico=popS(e->historico,e);
+        if (e->iniciado) mostrarJogo(e);
+    }
+}
+
+
 void cmdJogoBot(ESTADO *e, char * comando, char * opcode, char* fstArg, char* sndArg){
     //TODO caso n seja nem x nem ou nivel que n existe
     sscanf(comando,"%s %s %s",opcode,fstArg,sndArg);

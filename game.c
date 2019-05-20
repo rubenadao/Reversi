@@ -17,7 +17,7 @@
 #include "competicao.h"
 #include "menu.h"
 
-#define MAX_BUFFER 100
+#define MAX_BUFFER 500
 
 /**
  * Executa o comando escolhido pelo utilizador
@@ -49,7 +49,7 @@ void interpretador(char * comando, ESTADO *e) {
             cmdSugestao(e);
             break;
         case 'U':
-            cmdSugestao(e);
+            cmdUndo(e);
             break;
         case 'A':
             cmdJogoBot(e,comando,opcode,fstArg,sndArg);
@@ -58,15 +58,19 @@ void interpretador(char * comando, ESTADO *e) {
             sscanf(comando,"%s %s",opcode,fstArg);
             competicao(fstArg);
             break;
+            /*
         case 'T':
             testeBots(e);
             break;
+             */
         case '?':
             printInstruc(e);
+            break;
         case 'Q':
             exit(0);
         default:
             printf("Comando Invalido!\n");
+            break;
     }
 }
 
@@ -104,7 +108,6 @@ int isIniciado(ESTADO *e){
  * Inicializa um jogo
  * @param e - estado
  */
-
 void novoJogo(VALOR peca, ESTADO *e, char modo) {
     cleanEstado(e);
     initEstado(e);
@@ -116,50 +119,6 @@ void novoJogo(VALOR peca, ESTADO *e, char modo) {
     mostrarJogo(e);
 }
 
-
-//TODO Invocação de posValidas provoca MemoryLeak
-
-
-
-void testeBots(ESTADO *e) {
-    int times = 200;
-    for(int k = 0; k < 1; k++) {
-        float inven = 0.0;
-        int vitF = 0, vitD = 0, emp = 0;
-        for (int i = 0; i < times; i++) {
-            novoJogo(VALOR_O,e,'1');
-            while (ganhou(e) == -1) {
-                LPos lx =posValidas(e, VALOR_X);
-                LPos lo = posValidas(e ,VALOR_O);
-                if (e->peca == VALOR_X && lx != NULL) botFacil(e);
-                else if (e->peca == VALOR_X) {
-                    e->peca = VALOR_O;
-                    botDificil(e);
-                }
-                else if (e->peca == VALOR_O && lo != NULL) botDificil(e);
-                else if (e->peca == VALOR_O) {
-                    e->peca = VALOR_X;
-                    botFacil(e);
-                }
-                freeList(lx);
-                freeList(lo);
-            }
-            int vitoria = ganhou(e);
-
-            if (vitoria == 0) printf("%d - BOT FACIL GANHOU\n",i+1);
-            else if (vitoria == 1) printf("%d - BOT DIFICIL GANHOU\n",i+1);
-            else printf("%d - EMPATE\n",i+1);
-
-            if (vitoria == 0) vitF++;
-            else if (vitoria == 1) vitD++;
-            else emp++;
-        }
-        printf("Vitorias de Dificil:%d\n",vitD);
-        printf("Empates:%d\n",emp);
-        inven = ((vitD+emp)/(times + 0.0)) *100;
-        printf("Invencibilidade:%f\n",inven);
-    }
-}
 
 /**
  * Nova jogada
@@ -176,16 +135,6 @@ void novaJogada(POSICAO p, ESTADO *e) {
     if (e->iniciado == 1 && e->modo == '1' && e->peca != pecaAtual) jogadaBot(e,e->nivelBot);;
 }
 
-
-void novaJogadaAl(ESTADO *e) {
-    VALOR pecaAtual = e->peca;
-    resetValidos(e);
-    addHistorico(e);
-    botFacil(e);
-    processEndSwitch(e);
-    if (e->iniciado == 1 && e->modo == '1' && e->peca == pecaAtual) novaJogadaAl(e);
-    else if (e->iniciado == 1 && e->modo == '1' && e->peca != pecaAtual) jogadaBot(e,e->nivelBot);
-}
 
 /**
  * Aplica a jogada do bot dependendo do nivel
@@ -233,7 +182,9 @@ void mostrarJogo(ESTADO * e){
     printf("\n");
 }
 
-
+/**
+ * Primeira inicialização do Estado e loop para os comandos
+ */
 void startEngine() {
     //TODO porquê {0}?
     ESTADO e = {0};
@@ -275,7 +226,10 @@ void processFim(ESTADO *e){
 }
 
 //TODO Se já estiver cheio escuso de perder tempo com o jogadasValidas
-
+/**
+ * Função responsável pela passagem de turnos e fim do jogo
+ * @param e - Estado Atual
+ */
 void processEndSwitch(ESTADO *e){
     LPos lx = posValidas(e, VALOR_X);
     LPos lo = posValidas(e ,VALOR_O);
@@ -293,31 +247,6 @@ void processEndSwitch(ESTADO *e){
 }
 
 
-//TODO Invocação de posValidas provoca MemoryLeak
-
-
-int ganhou(ESTADO * e) {
-    int i = 0, j = 0;
-    LPos lx = posValidas(e, VALOR_X);
-    LPos lo = posValidas(e ,VALOR_O);
-    for (; i<8 && e->grelha [i][j] != VAZIA ; i++) {
-        for (; j<8 && e->grelha [i][j] != VAZIA ; j++);
-        j=0;
-    }
-    if (i==8)  {
-        freeList(lx);
-        freeList(lo);
-        return calculaVencedor(e);
-    }
-    if (lx == NULL  && lo == NULL) {
-        freeList(lx);
-        freeList(lo);
-        return calculaVencedor(e);
-    }
-    freeList(lx);
-    freeList(lo);
-    return -1;
-}
 
 /**
  * calcula o vencedor do jogo
@@ -343,7 +272,7 @@ void botFacil (ESTADO *e){
     pos = getPosIndex(l , x);
     resetValidos(e);
     executaJogada(e,pos);
-    //mostrarJogo(e);
+    mostrarJogo(e);
 }
 
 /**
@@ -370,7 +299,7 @@ void botDificil (ESTADO *e) {
     pos = s.posInit;
     resetValidos(e);
     executaJogada(e,pos);
-    //mostrarJogo(e);
+    mostrarJogo(e);
 }
 
 /**
@@ -395,9 +324,53 @@ void criaSMPEstado(ESTADO *e, smpESTADO *s) {
  * @param e - estado anterior
  * @param p - posição
  */
-
 void executaJogada(ESTADO *e, POSICAO p) {
     e->grelha[p.ln][p.cl] = e->peca;
     executaMudanca(e,p);
     proxTurno(e);
 }
+
+//TODO Invocação de posValidas provoca MemoryLeak
+
+
+/*
+void testeBots(ESTADO *e) {
+    int times = 200;
+    for(int k = 0; k < 1; k++) {
+        float inven = 0.0;
+        int vitF = 0, vitD = 0, emp = 0;
+        for (int i = 0; i < times; i++) {
+            novoJogo(VALOR_O,e,'1');
+            while (ganhou(e) == -1) {
+                LPos lx =posValidas(e, VALOR_X);
+                LPos lo = posValidas(e ,VALOR_O);
+                if (e->peca == VALOR_X && lx != NULL) botFacil(e);
+                else if (e->peca == VALOR_X) {
+                    e->peca = VALOR_O;
+                    botDificil(e);
+                }
+                else if (e->peca == VALOR_O && lo != NULL) botDificil(e);
+                else if (e->peca == VALOR_O) {
+                    e->peca = VALOR_X;
+                    botFacil(e);
+                }
+                freeList(lx);
+                freeList(lo);
+            }
+            int vitoria = ganhou(e);
+
+            if (vitoria == 0) printf("%d - BOT FACIL GANHOU\n",i+1);
+            else if (vitoria == 1) printf("%d - BOT DIFICIL GANHOU\n",i+1);
+            else printf("%d - EMPATE\n",i+1);
+
+            if (vitoria == 0) vitF++;
+            else if (vitoria == 1) vitD++;
+            else emp++;
+        }
+        printf("Vitorias de Dificil:%d\n",vitD);
+        printf("Empates:%d\n",emp);
+        inven = ((vitD+emp)/(times + 0.0)) *100;
+        printf("Invencibilidade:%f\n",inven);
+    }
+}
+*/

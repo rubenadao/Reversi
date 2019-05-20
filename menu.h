@@ -14,4 +14,5 @@ void cmdNovoJogo(ESTADO *e, char * comando, char * opcode, char* fstArg);
 void cmdJogada(ESTADO *e, char * comando, char * opcode, char* fstArg, char* sndArg);
 void cmdValidas(ESTADO *e);
 void cmdSugestao(ESTADO *e);
+void cmdUndo(ESTADO *e);
 void cmdJogoBot(ESTADO *e, char * comando, char * opcode, char* fstArg, char* sndArg);

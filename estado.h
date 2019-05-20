@@ -67,10 +67,6 @@ void colocaValidos(ESTADO * e);
 void proxTurno(ESTADO * e);
 char pecaParaChar(VALOR peca);
 VALOR charParaPeca (char peca);
-POSICAO subtraiVetorGrelha(POSICAO * a, int ln, int cl);
-void normalizaVetor(POSICAO * a);
-int isPotencial(POSICAO a);
-void posParaGrelha(POSICAO *a);
 void executaMudanca(ESTADO * e, POSICAO a);
 //void auxMudanca(ESTADO * e, int ln, int cl , POSICAO vetor, POSICAO final);
 

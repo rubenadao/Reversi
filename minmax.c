@@ -14,15 +14,15 @@
 //TODO Caso de acabar jogo
 
 /**
- * descricao da funcao
+ * Função que executa o algoritmo Minmax
  * @param est - estado do tabuleiro
- * @param depth
- * @param alpha
- * @param beta
- * @param maximizante
- * @param pecaMax
- * @param init
- * @return
+ * @param depth - nível de profundidade
+ * @param alpha - valor de alpha
+ * @param beta - valor de beta
+ * @param maximizante - booleano (indica o tipo de jogador)
+ * @param pecaMax - peça a maximizar
+ * @param init - booleano(representa a primeira chamada da função)
+ * @return - smpEstado com melhor avaliação
  */
 smpESTADO minmax2(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init) {
     //TODO listas de LPos com posições repetidas afetam desempenho
@@ -47,6 +47,17 @@ smpESTADO minmax2(smpESTADO est, int depth, float alpha, float beta, int maximiz
     }
 }
 
+/**
+ * Função minmax, restringida ao maximizante
+ * @param est - estado do tabuleiro
+ * @param depth - nível de profundidade
+ * @param alpha - valor de alpha
+ * @param beta - valor de beta
+ * @param maximizante - booleano (indica o tipo de jogador)
+ * @param pecaMax - peça a maximizar
+ * @param init - booleano(representa a primeira chamada da função)
+ * @return - smpEstado com melhor avaliação
+ */
 smpESTADO funcMaximizante(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init){
     smpESTADO nEst;
     nEst.eval = -INFINITY;
@@ -83,7 +94,17 @@ smpESTADO funcMaximizante(smpESTADO est, int depth, float alpha, float beta, int
     return nEst;
 }
 
-
+/**
+ * Função minmax, restringida ao jogador minimizante
+ * @param est - estado do tabuleiro
+ * @param depth - nível de profundidade
+ * @param alpha - valor de alpha
+ * @param beta - valor de beta
+ * @param maximizante - booleano (indica o tipo de jogador)
+ * @param pecaMax - peça a maximizar
+ * @param init - booleano(representa a primeira chamada da função)
+ * @return - smpEstado com melhor avaliação
+ */
 smpESTADO funcMinimizante(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init){
     smpESTADO nEst;
     nEst.eval = INFINITY;
@@ -111,7 +132,12 @@ smpESTADO funcMinimizante(smpESTADO est, int depth, float alpha, float beta, int
     return nEst;
 }
 
-
+/**
+ * Cria um smpEstado-filho a partir de outro
+ * @param est - smpEstado-Pai
+ * @param new - smpEstado-Filho
+ * @param pos - posição jogada
+ */
 void smpEstadoChild(smpESTADO *est, smpESTADO *new, POSICAO pos){
     new->peca = est->peca;
     new->grelha[pos.ln][pos.cl] = est->peca;
@@ -119,6 +145,11 @@ void smpEstadoChild(smpESTADO *est, smpESTADO *new, POSICAO pos){
     new->peca = pecaOposta(est->peca);
 }
 
+/**
+ * Cria um smpEstado igual a outro
+ * @param est - smpEstado-Pai
+ * @param new - Clone
+ */
 void criaSMPEstadoV(smpESTADO *est, smpESTADO *new) {
     for(int k = 0;k<8;k++) {
         int j = 0;
@@ -129,13 +160,17 @@ void criaSMPEstadoV(smpESTADO *est, smpESTADO *new) {
 }
 
 
-
-
 /*
  * Coin Parity Heuristic Value =
 	100 * (Max Player Coins - Min Player Coins ) / (Max Player Coins + Min Player Coins)
  */
 
+/**
+ * Heutística que avalia o número de peças de um jogador em relação ao outro
+ * @param e - smpEstado
+ * @param pecaMax - peça maximizante
+ * @return - Valor da Heurística
+ */
 float aval_paridade(smpESTADO *e,VALOR pecaMax) {
     float r;
     float max_c = (float) pontuacaoS(e,pecaMax);
@@ -152,6 +187,12 @@ else
 	Mobility Heuristic Value = 0
  */
 
+/**
+ * Heutística que avalia a mobilidade das peças
+ * @param e - smpEstado
+ * @param pecaMax - peça maximizante
+ * @return - Avaliação da Heurísitca
+ */
 float aval_mobilidade(smpESTADO *e,VALOR pecaMax){
     float r = 0;
     LPos posVmax = posValidasS(e,pecaMax);
@@ -174,6 +215,12 @@ else
 	Corner Heuristic Value = 0
  */
 
+/**
+ * Heutística que avalia os cantos no tabuleiro
+ * @param e - smpEstado
+ * @param pecaMax - peça maximizante
+ * @return - Valor da Heurísitica
+ */
 float aval_cantos(smpESTADO *e,VALOR pecaMax){
     float r = 0;
     float ca_max = (float) cantosPecaS(e,pecaMax);
@@ -187,6 +234,12 @@ float aval_cantos(smpESTADO *e,VALOR pecaMax){
     return r;
 }
 
+/**
+ * Heutística que avalia as peças perto dos Cantos
+ * @param e - smpEstado
+ * @param pecaMax - peça maximizante
+ * @return - Valor da Heurística
+ */
 float aval_pertoCantos(smpESTADO *e,VALOR pecaMax) {
     float r;
     int max_c = 0;
@@ -227,6 +280,12 @@ float aval_pertoCantos(smpESTADO *e,VALOR pecaMax) {
     return r;
 }
 
+/**
+ * Indica o número de cantos pertencentes a um jogador
+ * @param e - smpEstado
+ * @param p - Valor da peça
+ * @return - Número de cantos
+ */
 int cantosPecaS(smpESTADO *e, VALOR p) {
     int r = 0;
     if (e->grelha[0][0] == p) r++;
@@ -236,6 +295,12 @@ int cantosPecaS(smpESTADO *e, VALOR p) {
     return r;
 }
 
+/**
+ * Heutística que avalia a grelha do Estado
+ * @param e - smpEstado
+ * @param pecaMax - peça a Maximizar
+ * @return - Valor da Heuristica
+ */
 float aval_tab(smpESTADO * e, VALOR pecaMax) {
     float d = 0;
     int V[8][8] = {{20, -3, 11, 8,  8,  11, -3, 20},
@@ -258,6 +323,12 @@ float aval_tab(smpESTADO * e, VALOR pecaMax) {
     return d;
 }
 
+/**
+ * Heutística que avalia peças perigosas
+ * @param e - smpEstado
+ * @param pecaMax - peça a maximizar
+ * @return - Valor da Heuristica
+ */
 float aval_fromTiles(smpESTADO * e, VALOR pecaMax) {
     int r = 0;
     int my_front_tiles = 0, opp_front_tiles = 0;
@@ -287,6 +358,12 @@ float aval_fromTiles(smpESTADO * e, VALOR pecaMax) {
 }
 
 //TODO implica o depth ser par, devido á forma como a pontucao é calculada
+/**
+ * Retorna a avaliação de um smpEstado a partir da várias heurísticas
+ * @param e - smpEstado
+ * @param pecaMax - peça a maximizar
+ * @return - Avaliação
+ */
 float avaliaEst(smpESTADO * e, VALOR pecaMax){
     float p = 10 * aval_paridade(e,pecaMax);
     float c = 801.724 * aval_cantos(e,pecaMax);
@@ -305,7 +382,11 @@ float avaliaEst(smpESTADO * e, VALOR pecaMax){
 }
 
 
-
+/**
+ * Retorna o valor do vencedor
+ * @param e - smpEstado
+ * @return - Valor do vencedor
+ */
 int ganhouS(smpESTADO * e) {
     int i = 0, j = 0;
     LPos lx =posValidasS(e, VALOR_X);
@@ -329,92 +410,49 @@ int ganhouS(smpESTADO * e) {
     return -1;
 }
 
-
+/**
+ * Reimplementação da função calculaVencedor para smpEstado
+ * @param e - smpEstado
+ * @return - Valor representativo do vencedor
+ */
 int calculaVencedorS(smpESTADO *e) {
     if (pontuacaoS(e,VALOR_X) > pontuacaoS(e,VALOR_O)) return 0;
     else if (pontuacaoS(e,VALOR_X) < pontuacaoS(e,VALOR_O)) return 1;
     else return 2;
 }
 
-//BACKUP
-
-int minmax(smpESTADO *est, int depth, int alpha, int beta, int maximizante, VALOR pecaMax) {
-    if (depth==0) {
-        //printaS(*est);
-        int eval = avaliaEst(est,pecaMax);
-        //printf("eval: %d\n",eval);
-        return eval;
-    }
-
-    if (maximizante == 1) {
-        int maxEval = -1000000;
-        LPos l = posValidasS(est,est->peca);
-        //printf("length:%d\n",lengthList(l));
-        for (int i = 0; i < lengthList(l);i++) {
-            //printf("iteracao: %d\n",i);
-            POSICAO pos;
-            pos = getPosIndex(l,i);
-            smpESTADO new = {0};
-            for(int k = 0;k<8;k++) {
-                int j = 0;
-                for(;j<8;j++)
-                    new.grelha[k][j]=est->grelha[k][j];
-                j=0;
-            }
-            new.peca = est->peca;
-            new.grelha[pos.ln][pos.cl] = est->peca;
-            executaMudancaS(&new,pos);
-            new.peca = pecaOposta(est->peca);
-            int eval = minmax(&new,depth-1,alpha,beta,0,pecaMax);
-            //printf("%d\n",eval);
-            maxEval = max(maxEval,eval);
-            alpha = max(alpha,eval);
-            if (beta <= alpha) break;
-        }
-        freeList(l);
-        return maxEval;
-    } else {
-        int minEval = 1000000;
-        LPos l = posValidasS(est,est->peca);
-        for (int i = 0; i< lengthList(l);i++) {
-            POSICAO pos;
-            pos = getPosIndex(l, i);
-            smpESTADO new = {0};
-            for(int k = 0;k<8;k++) {
-                int j = 0;
-                for(;j<8;j++)
-                    new.grelha[k][j]=est->grelha[k][j];
-                j=0;
-            }
-            new.peca = est->peca;
-            new.grelha[pos.ln][pos.cl] = est->peca;
-            executaMudancaS(&new, pos);
-            new.peca = pecaOposta(est->peca);
-            //printaS(*est);
-            int eval = minmax(&new, depth - 1, alpha, beta, 1, pecaMax);
-            minEval = min(minEval, eval);
-            beta = min(beta, eval);
-            if (beta <= alpha) break;
-        }
-        freeList(l);
-        return minEval;
-    }
-}
 
 
-
+/**
+ * Retorna o menor de dois valores
+ * @param x - 1º valor
+ * @param y - 2º valor
+ * @return - Menor valor
+ */
 float min(float x, float y) {
     if (x > y) return y;
     else return x;
 }
 
+
+/**
+ * Retorna o maior de dois valores
+ * @param x - 1º valor
+ * @param y - 2º valor
+ * @return - Maior valor
+ */
 float max(float x, float y) {
     if (x > y) return x;
     else return y;
 }
 
 
-
+/**
+ * Reimplementação da função posValidas para smpEstado
+ * @param e - smpEstado
+ * @param peca - Peça para calcular jogadas
+ * @return - Lista LPos
+ */
 LPos posValidasS(smpESTADO * e, VALOR peca) {
     LPos l = NULL;
     POSICAO direcoes[8];
@@ -447,6 +485,12 @@ LPos posValidasS(smpESTADO * e, VALOR peca) {
     return l;
 }
 
+/**
+ * Reimplementação da função pontuacao para smpEstado
+ * @param e - smpEstado
+ * @param p - Peça para calcular Pontuação
+ * @return - Pontuação
+ */
 int pontuacaoS (smpESTADO *e,VALOR p){
     int i=0,j=0,n=0;
     for(;i<8;i++){
@@ -459,6 +503,11 @@ int pontuacaoS (smpESTADO *e,VALOR p){
     return n;
 }
 
+/**
+ * Reimplementação da função executaMudança para smpEstado
+ * @param e - smpEstado
+ * @param a - Posição Jogada
+ */
 void executaMudancaS (smpESTADO * e, POSICAO a) {
     POSICAO direcoes[8];
     initDirecoes(direcoes);
@@ -487,112 +536,8 @@ void executaMudancaS (smpESTADO * e, POSICAO a) {
 
 
 
-int avaliaEstS(smpESTADO * e, VALOR pecaMax){
-    int x = pontuacaoS(e,pecaMax);
-    int y = pontuacaoS(e,pecaOposta(pecaMax));
-    return x-y;
-}
 
 
-smpESTADO minmax3(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init) {
-    //TODO listas de LPos com posições repetidas afetam desempenho
-    //TODO Fzer free ás listas (sempre que invoco posValidas em todo o código)
-    //TODO ao acrescentar a segunda parte dá
-    if (depth == 0 || ganhouS(&est) != -1) {
-        if (init == 1) {
-            LPos l = posValidasS(&est,est.peca);
-            POSICAO p;
-            p = getPosIndex(l,0);
-            est.posInit = p;
-            freeList(l);
-        }
-        //TODO Caso em que o pecaInit n é alterado pq o jogo acaba
-        est.eval = avaliaEstS(&est,pecaMax);
-        return est;
-    }
-    if (maximizante == 1) {
-        smpESTADO nEst;
-        nEst.eval = -65;
-        //int maxEval = -65;
-        LPos l = posValidasS(&est,est.peca);
-        //TODO pode estar mal.. n sei
-        if (l == NULL) {
-            est.peca = pecaOposta(est.peca);
-            return minmax3(est,depth,alpha,beta,0,pecaMax,init);
-        }
-        for (int i = 0; i < lengthList(l);i++) {
-            //printf("iteracao: %d\n",i);
-            POSICAO pos;
-            pos = getPosIndex(l,i);
-            smpESTADO new;
-            for(int k = 0;k<8;k++) {
-                int j = 0;
-                for(;j<8;j++)
-                    new.grelha[k][j]=est.grelha[k][j];
-                j=0;
-            }
-            if (init == 1) {
-                POSICAO p;
-                p.ln = pos.ln;
-                p.cl = pos.cl;
-                new.posInit = p;
-            }
-            else {
-                new.posInit = est.posInit;
-            }
-            new.peca = est.peca;
-            new.grelha[pos.ln][pos.cl] = est.peca;
-            executaMudancaS(&new,pos);
-            new.peca = pecaOposta(est.peca);
-            //printaS(*est);
-            new = minmax3(new,depth-1,alpha,beta,0,pecaMax,0);
-            //printf("%d\n",new.eval);
-            //TODO E se isto nunca acontecer??
-            if (max(nEst.eval,new.eval) == new.eval) {
-                nEst.eval = max(nEst.eval,new.eval);
-                nEst.posInit = new.posInit;
-            }
-            alpha = (int) max(alpha,new.eval);
-            if (beta <= alpha) break;
-        }
-        freeList(l);
-        return nEst;
-    } else {
-        smpESTADO nEst;
-        nEst.eval = 65;
-        LPos l = posValidasS(&est,est.peca);
-        if (l == NULL) {
-            est.peca = pecaOposta(est.peca);
-            return minmax3(est,depth,alpha,beta,1,pecaMax,init);
-        }
-        for (int i = 0; i< lengthList(l);i++) {
-            POSICAO pos;
-            pos = getPosIndex(l, i);
-            smpESTADO new;
-            for(int k = 0;k<8;k++) {
-                int j = 0;
-                for(;j<8;j++)
-                    new.grelha[k][j]=est.grelha[k][j];
-                j=0;
-            }
-            new.posInit = est.posInit;
-            new.peca = est.peca;
-            new.grelha[pos.ln][pos.cl] = est.peca;
-            executaMudancaS(&new, pos);
-            new.peca = pecaOposta(est.peca);
-            //printaS(*est);
-            new = minmax3(new,depth-1,alpha,beta,1,pecaMax,0);
 
-            if (min(nEst.eval,new.eval) == new.eval) {
-                nEst.eval = min(nEst.eval,new.eval);
-                nEst.posInit = new.posInit;
-            }
-            beta = (int) min(beta,new.eval);
-            if (beta <= alpha) break;
-        }
-        freeList(l);
-        return nEst;
-    }
-}
 
 
