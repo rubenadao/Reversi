@@ -4,6 +4,9 @@
 #ifndef PROJ_ESTADO_H
 #define PROJ_ESTADO_H
 
+/**
+ * Estrutura que armazena uma posição ou um vetor
+ */
 //Estrutura que representa uma posição na Grelha do Estado
 typedef struct posicao{
     int ln;
@@ -19,6 +22,9 @@ Definição do estado i.e. tabuleiro. Representação matricial do tabuleiro.
 // definição de valores possiveis no tabuleiro
 typedef enum {VAZIA, VALOR_X, VALOR_O, VALIDO} VALOR;
 
+/**
+ * Estrutura que armazena uma versão simplificada do jogo
+ */
 //TODO Está a ser usado para duas coisas diferentes
 typedef struct simple_estado {
     VALOR peca; // peça do jogador que vai jogar!

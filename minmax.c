@@ -454,21 +454,6 @@ int pontuacaoS (smpESTADO *e,VALOR p){
     return n;
 }
 
-
-/*
-int pontuacaoS (smpESTADO *e,VALOR p){
-    int i=0,j=0,n=0;
-    for(;i<8;i++){
-        for(;j<8;j++){
-            if(e->grelha[i][j]==p)
-                n++;
-        }
-        j=0;
-    }
-    return n;
-}
-*/
-
 void executaMudancaS (smpESTADO * e, POSICAO a) {
     POSICAO direcoes[8];
     initDirecoes(direcoes);
@@ -494,47 +479,6 @@ void executaMudancaS (smpESTADO * e, POSICAO a) {
         }
     }
 }
-
-void printaS(smpESTADO e)
-{
-    char c = ' ';
-
-    printf("  1 2 3 4 5 6 7 8\n");
-
-    int k = 1;
-    for (int i = 0; i < 8; i++) {
-        printf("%d ",k++);
-        for (int j = 0; j < 8; j++) {
-            switch (e.grelha[i][j]) {
-                case VALOR_O: {
-                    c = 'O';
-                    break;
-                }
-                case VALOR_X: {
-                    c = 'X';
-                    break;
-                }
-                case VAZIA: {
-                    c = '-';
-                    break;
-                }
-                case VALIDO: {
-                    printf("N ERA SUPOSTO!");
-                    break;
-                }
-            }
-            printf("%c ", c);
-
-        }
-        printf("\n");
-    }
-
-}
-
-
-
-
-
 
 
 

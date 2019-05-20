@@ -14,6 +14,7 @@
 #include "validos.h"
 #include "file_manager.h"
 #include "minmax.h"
+#include "competicao.h"
 
 #define MAX_BUFFER 100
 
@@ -44,7 +45,7 @@ void interpretador(char * comando, ESTADO *e) {
             //if (e->iniciado) mostrarJogo(e);
             break;
         case 'J':
-            if (isIniciado(e)) {
+            if (isIniciado(e))  {
                 sscanf(comando,"%s %s %s",opcode,fstArg,sndArg);
                 if (isdigit(fstArg[0]) && isdigit(sndArg[0])) {
                     POSICAO p;
@@ -95,11 +96,16 @@ void interpretador(char * comando, ESTADO *e) {
             sscanf(comando,"%s %s %s",opcode,fstArg,sndArg);
             e->nivelBot = (int) (sndArg[0]-48);
             if (toupper(fstArg[0]) != 'X') {
-                novoJogoB(e);
+                novoJogo(VALOR_X,e,'1');
+                jogadaBot(e,e->nivelBot);
             } else novoJogo(VALOR_X,e,'1');
             break;
         case 'R':
             novaJogadaAl(e);
+            break;
+        case 'C':
+            sscanf(comando,"%s %s",opcode,fstArg);
+            competicao(fstArg);
             break;
         case 'T':
             testeBots(e);
@@ -169,19 +175,6 @@ void novoJogo(VALOR peca, ESTADO *e, char modo) {
     mostrarJogo(e);
 }
 
-//TODO Função desnecessária ou codigo desnec.
-
-
-void novoJogoB(ESTADO *e) {
-    cleanEstado(e);
-    initEstado(e);
-    e->modo = '1';
-    e->peca = VALOR_X;
-    e->mostravalidos = 0;
-    e->historico = NULL;
-    mostrarJogo(e);
-    jogadaBot(e,e->nivelBot);
-}
 
 //TODO Invocação de posValidas provoca MemoryLeak
 
@@ -303,6 +296,7 @@ void mostrarJogo(ESTADO * e){
 void startEngine() {
     //TODO porquê {0}?
     ESTADO e = {0};
+    //fazer push aqui
     e.iniciado = 0;
     //TODO Fazer dinamico??
     char comando[MAX_BUFFER];
