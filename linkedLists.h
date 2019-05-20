@@ -7,6 +7,9 @@
 
 #include "estado.h"
 
+/**
+ * Estrutura que armazena uma Lista de Posições
+ */
 typedef struct slist *LPos;
 typedef struct slist {
     POSICAO pos;

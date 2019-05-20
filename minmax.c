@@ -41,89 +41,94 @@ smpESTADO minmax2(smpESTADO est, int depth, float alpha, float beta, int maximiz
         return est;
     }
     if (maximizante == 1) {
-        smpESTADO nEst;
-        nEst.eval = -INFINITY;
-        //int maxEval = -65;
-        LPos l = posValidasS(&est,est.peca);
-        //TODO pode estar mal.. n sei
-        if (l == NULL) {
-            est.peca = pecaOposta(est.peca);
-            return minmax2(est,depth,alpha,beta,0,pecaMax,init);
-        }
-        for (int i = 0; i < lengthList(l);i++) {
-            //printf("iteracao: %d\n",i);
-            POSICAO pos;
-            pos = getPosIndex(l,i);
-            smpESTADO new;
-            for(int k = 0;k<8;k++) {
-                int j = 0;
-                for(;j<8;j++)
-                    new.grelha[k][j]=est.grelha[k][j];
-                j=0;
-            }
-            if (init == 1) {
-                POSICAO p;
-                p.ln = pos.ln;
-                p.cl = pos.cl;
-                new.posInit = p;
-            }
-            else {
-                new.posInit = est.posInit;
-            }
-            new.peca = est.peca;
-            new.grelha[pos.ln][pos.cl] = est.peca;
-            executaMudancaS(&new,pos);
-            new.peca = pecaOposta(est.peca);
-            //printaS(*est);
-            new = minmax2(new,depth-1,alpha,beta,0,pecaMax,0);
-            //printf("%d\n",new.eval);
-            //TODO E se isto nunca acontecer??
-            if (max(nEst.eval,new.eval) == new.eval) {
-                nEst.eval = max(nEst.eval,new.eval);
-                nEst.posInit = new.posInit;
-            }
-            alpha = max(alpha,new.eval);
-            if (beta <= alpha) break;
-        }
-        freeList(l);
-        return nEst;
+        return funcMaximizante(est,depth,alpha,beta,maximizante,pecaMax,init);
     } else {
-        smpESTADO nEst;
-        nEst.eval = INFINITY;
-        LPos l = posValidasS(&est,est.peca);
-        if (l == NULL) {
-            est.peca = pecaOposta(est.peca);
-            return minmax2(est,depth,alpha,beta,1,pecaMax,init);
-        }
-        for (int i = 0; i< lengthList(l);i++) {
-            POSICAO pos;
-            pos = getPosIndex(l, i);
-            smpESTADO new;
-            for(int k = 0;k<8;k++) {
-                int j = 0;
-                for(;j<8;j++)
-                    new.grelha[k][j]=est.grelha[k][j];
-                j=0;
-            }
-            new.posInit = est.posInit;
-            new.peca = est.peca;
-            new.grelha[pos.ln][pos.cl] = est.peca;
-            executaMudancaS(&new, pos);
-            new.peca = pecaOposta(est.peca);
-            //printaS(*est);
-            new = minmax2(new,depth-1,alpha,beta,1,pecaMax,0);
-
-            if (min(nEst.eval,new.eval) == new.eval) {
-                nEst.eval = min(nEst.eval,new.eval);
-                nEst.posInit = new.posInit;
-            }
-            beta = min(beta,new.eval);
-            if (beta <= alpha) break;
-        }
-        freeList(l);
-        return nEst;
+        return funcMinimizante(est,depth,alpha,beta,maximizante,pecaMax,init);
     }
 }
+
+smpESTADO funcMaximizante(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init){
+    smpESTADO nEst;
+    nEst.eval = -INFINITY;
+    //int maxEval = -65;
+    LPos l = posValidasS(&est,est.peca);
+    //TODO pode estar mal.. n sei
+    if (l == NULL) {
+        est.peca = pecaOposta(est.peca);
+        return minmax2(est,depth,alpha,beta,0,pecaMax,init);
+    }
+    for (int i = 0; i < lengthList(l);i++) {
+        POSICAO pos;
+        pos = getPosIndex(l,i);
+        smpESTADO new;
+        criaSMPEstadoV(&est,&new);
+        if (init == 1) {
+            POSICAO p;
+            p.ln = pos.ln;
+            p.cl = pos.cl;
+            new.posInit = p;
+        }
+        else new.posInit = est.posInit;
+        smpEstadoChild(&est,&new,pos);
+        new = minmax2(new,depth-1,alpha,beta,0,pecaMax,0);
+        //TODO E se isto nunca acontecer??
+        if (max(nEst.eval,new.eval) == new.eval) {
+            nEst.eval = max(nEst.eval,new.eval);
+            nEst.posInit = new.posInit;
+        }
+        alpha = max(alpha,new.eval);
+        if (beta <= alpha) break;
+    }
+    freeList(l);
+    return nEst;
+}
+
+
+smpESTADO funcMinimizante(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init){
+    smpESTADO nEst;
+    nEst.eval = INFINITY;
+    LPos l = posValidasS(&est,est.peca);
+    if (l == NULL) {
+        est.peca = pecaOposta(est.peca);
+        return minmax2(est,depth,alpha,beta,1,pecaMax,init);
+    }
+    for (int i = 0; i< lengthList(l);i++) {
+        POSICAO pos;
+        pos = getPosIndex(l, i);
+        smpESTADO new;
+        criaSMPEstadoV(&est,&new);
+        new.posInit = est.posInit;
+        smpEstadoChild(&est,&new,pos);
+        new = minmax2(new,depth-1,alpha,beta,1,pecaMax,0);
+        if (min(nEst.eval,new.eval) == new.eval) {
+            nEst.eval = min(nEst.eval,new.eval);
+            nEst.posInit = new.posInit;
+        }
+        beta = min(beta,new.eval);
+        if (beta <= alpha) break;
+    }
+    freeList(l);
+    return nEst;
+}
+
+
+void smpEstadoChild(smpESTADO *est, smpESTADO *new, POSICAO pos){
+    new->peca = est->peca;
+    new->grelha[pos.ln][pos.cl] = est->peca;
+    executaMudancaS(new,pos);
+    new->peca = pecaOposta(est->peca);
+}
+
+void criaSMPEstadoV(smpESTADO *est, smpESTADO *new) {
+    for(int k = 0;k<8;k++) {
+        int j = 0;
+        for(;j<8;j++)
+            new->grelha[k][j]=est->grelha[k][j];
+        j=0;
+    }
+}
+
+
 
 
 /*

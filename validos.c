@@ -12,6 +12,11 @@
 #include "linkedLists.h"
 #include "validos.h"
 
+/**
+ * Modifica uma Lista de Posições, colocando
+ * todos os possíveis vetores de direção.
+ * @param direcoes - Lista de Posições
+ */
 void initDirecoes(POSICAO direcoes []) {
     POSICAO d;
     d.ln = -1;
@@ -29,6 +34,13 @@ void initDirecoes(POSICAO direcoes []) {
     }
 }
 
+/**
+ * Origina uma lista com todas as posições que constituem
+ * jogadas válidas num Estado
+ * @param e - Estado Atual
+ * @param peca - Peça da qual queremos obter a lista
+ * @return - Lista de tipo LPos
+ */
 //TODO Vazia ou Valido
 LPos posValidas(ESTADO * e, VALOR peca) {
     //TODO Chamo isto atrás muitas vezes
@@ -66,6 +78,13 @@ LPos posValidas(ESTADO * e, VALOR peca) {
     return l;
 }
 
+/**
+ * Verifica se uma Posição já existe em uma lista
+ * @param l - lista de tipo LPos
+ * @param ln - linha da Posição
+ * @param cl - coluna da Posição
+ * @return - 1 ou 0 conforme for verdadeira ou falsa
+ */
 int posExiste(LPos l, int ln, int cl){
     int r = 0;
     while(l != NULL && r == 0) {

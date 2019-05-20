@@ -7,15 +7,12 @@
 #include <string.h>
 #include <stdio.h>
 
-void printList(LPos l){
-    LPos new = l;
-    while(new != NULL) {
-        printf("(%d,%d) ",new->pos.ln,new->pos.cl);
-        new = new->prox;
-    }
-    printf("\n");
-}
-
+/**
+ * Adiciona uma nova Posição a uma Lista
+ * @param l - Lista do tipo LPos
+ * @param p - Posição
+ * @return - Lista alterada
+ */
 LPos addPos (LPos l, POSICAO p) {
     LPos n1;
     n1 = (LPos) malloc(sizeof(Nodo));
@@ -25,6 +22,11 @@ LPos addPos (LPos l, POSICAO p) {
     return n1;
 }
 
+/**
+ * Calcula o número de elementos de uma lista
+ * @param l - Lista do tipo LPos
+ * @return - Número de Elementos
+ */
 int lengthList(LPos l) {
     LPos aux = l;
     int c=0;
@@ -35,6 +37,12 @@ int lengthList(LPos l) {
     return c;
 }
 
+/**
+ * Devolve a Posição de um determinado indíce numa Lista
+ * @param l - Lista do tipo LPos
+ * @param i - índice
+ * @return - Posição
+ */
 POSICAO getPosIndex(LPos l, int i) {
     for (int j = 0; j < i; j++) {
         l=l->prox;
@@ -42,6 +50,10 @@ POSICAO getPosIndex(LPos l, int i) {
     return l->pos;
 }
 
+/**
+ * Liberta a memória alocada por uma Lista
+ * @param l - Lista do tipo LPos
+ */
 void freeList(LPos l) {
     LPos head = l;
     LPos tmp;

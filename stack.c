@@ -6,6 +6,12 @@
 #include "estado.h"
 #include <stdlib.h>
 
+/**
+ * Adiciona um smpEstado ao topo da Stack
+ * @param l - Stack
+ * @param e - smpEstado
+ * @return - Stack alterada
+ */
 //descnecessário dar a stack
 STACK pushS(STACK l, smpESTADO e) {
     STACK new;
@@ -15,6 +21,12 @@ STACK pushS(STACK l, smpESTADO e) {
     return new;
 }
 
+/**
+ * Retira o smpEstado localizado no topo de uma Stack
+ * @param l - Stack
+ * @param e - smpEsatdo
+ * @return - Stack alterada
+ */
 //descnecessário dar a stack
 STACK popS(STACK l, ESTADO *e) {
     if (l != NULL && l->prox != NULL) {
@@ -32,12 +44,5 @@ STACK popS(STACK l, ESTADO *e) {
         return l;
     //} else printf("Nao existem jogadas anteriores!\n\n");
     } else e->iniciado = 0;
-}
-
-void printStack(STACK s) {
-    while ( s != NULL) {
-        printf("+ ");
-        s = s->prox;
-    }
-    printf("\n");
+    //TODO = {0}
 }

@@ -15,7 +15,11 @@ typedef struct posAvaliada{
 */
 
 smpESTADO minmax2(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init);
+smpESTADO funcMaximizante(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init);
+smpESTADO funcMinimizante(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init);
 smpESTADO minmax3(smpESTADO est, int depth, float alpha, float beta, int maximizante, VALOR pecaMax, int init);
+void smpEstadoChild(smpESTADO *est, smpESTADO *new, POSICAO pos);
+void criaSMPEstadoV(smpESTADO *e, smpESTADO *s);
 int ganhouS(smpESTADO * e);
 int calculaVencedorS(smpESTADO *e);
 float aval_paridade(smpESTADO *e,VALOR pecaMax);

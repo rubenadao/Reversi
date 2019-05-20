@@ -15,6 +15,7 @@
 #include "file_manager.h"
 #include "minmax.h"
 #include "competicao.h"
+#include "menu.h"
 
 #define MAX_BUFFER 100
 
@@ -30,78 +31,28 @@ void interpretador(char * comando, ESTADO *e) {
     sscanf(comando,"%s",opcode);
     switch (toupper(opcode[0])) {
         case 'N':
-            sscanf(comando,"%s %s",opcode,fstArg);
-            if ( charParaPeca(toupper(fstArg[0])) != VAZIA  ) {
-                novoJogo(charParaPeca(toupper(fstArg[0])),e,'0');
-            } else printf("Peca invalida!\n");
+            cmdNovoJogo(e,comando,opcode,fstArg);
             break;
         case 'L':
-            sscanf(comando,"%s %s",opcode,fstArg);
-            lerFicheiro(fstArg,e);
+            cmdLer(e,comando,opcode,fstArg);
             break;
         case 'E':
-            sscanf(comando,"%s %s",opcode,fstArg);
-            escreverFicheiro(fstArg,e);
-            //if (e->iniciado) mostrarJogo(e);
+            cmdEscrever(e,comando,opcode,fstArg);
             break;
         case 'J':
-            if (isIniciado(e))  {
-                sscanf(comando,"%s %s %s",opcode,fstArg,sndArg);
-                if (isdigit(fstArg[0]) && isdigit(sndArg[0])) {
-                    POSICAO p;
-                    p.ln = (int)fstArg[0]-49;
-                    p.cl = (int)sndArg[0]-49;
-                    colocaValidos(e);
-                    if (e->grelha[p.ln][p.cl] == VALIDO) {
-                        novaJogada(p,e);
-                        e->mostravalidos = 0;
-                    }
-                    else {
-                        //TODO mesmo que a jogada seja invalida ainda mostra os pontos validos
-                        printf("Escolha uma jogada valida!\n\n");
-                        mostrarJogo(e);
-                    }
-                } else {
-                    printf("Posicao Invalida!\n\n");
-                    mostrarJogo(e);
-                }
-            }
+            cmdJogada(e,comando,opcode,fstArg,sndArg);
             break;
         case 'S':
-            if (isIniciado(e)) {
-                e->mostravalidos = 1;
-                colocaValidos(e);
-                mostrarJogo(e);
-            }
+            cmdValidas(e);
             break;
         case 'H':
-            //TODO Melhorar isto
-            if (isIniciado(e)) {
-                //TODO POR ISTO NUMA FUNÇÃO E USAR TBM NO 'A'
-                smpESTADO s;
-                criaSMPEstado(e,&s);
-                POSICAO p;
-                p = minmax2(s,5,-INFINITY,INFINITY,1,e->peca,1).posInit;
-                printWithH(*e,p);
-            }
+            cmdSugestao(e);
             break;
         case 'U':
-            if (isIniciado(e)){
-                e->historico=popS(e->historico,e);
-                if (e->iniciado) mostrarJogo(e);
-            }
+            cmdSugestao(e);
             break;
         case 'A':
-            //TODO caso n seja nem x nem ou nivel que n existe
-            sscanf(comando,"%s %s %s",opcode,fstArg,sndArg);
-            e->nivelBot = (int) (sndArg[0]-48);
-            if (toupper(fstArg[0]) != 'X') {
-                novoJogo(VALOR_X,e,'1');
-                jogadaBot(e,e->nivelBot);
-            } else novoJogo(VALOR_X,e,'1');
-            break;
-        case 'R':
-            novaJogadaAl(e);
+            cmdJogoBot(e,comando,opcode,fstArg,sndArg);
             break;
         case 'C':
             sscanf(comando,"%s %s",opcode,fstArg);
@@ -110,21 +61,11 @@ void interpretador(char * comando, ESTADO *e) {
         case 'T':
             testeBots(e);
             break;
-        case '1':
-            jogadaBot(e,1);
-            break;
-        case '2':
-            jogadaBot(e,2);
-            break;
-        case '3':
-            jogadaBot(e,3);
-            break;
         case '?':
             printInstruc(e);
         case 'Q':
             exit(0);
         default:
-            //TODO
             printf("Comando Invalido!\n");
     }
 }
@@ -402,7 +343,7 @@ void botFacil (ESTADO *e){
     pos = getPosIndex(l , x);
     resetValidos(e);
     executaJogada(e,pos);
-    mostrarJogo(e);
+    //mostrarJogo(e);
 }
 
 /**
@@ -425,11 +366,11 @@ void botMedio (ESTADO *e) {
 void botDificil (ESTADO *e) {
     smpESTADO s; POSICAO pos;
     criaSMPEstado(e,&s);
-    s = minmax2(s,7,-INFINITY,INFINITY,1,e->peca,1);
+    s = minmax2(s,5,-INFINITY,INFINITY,1,e->peca,1);
     pos = s.posInit;
     resetValidos(e);
     executaJogada(e,pos);
-    mostrarJogo(e);
+    //mostrarJogo(e);
 }
 
 /**
